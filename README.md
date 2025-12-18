@@ -1,34 +1,54 @@
 # PrintStruct
 
-A Python CLI script for printing the structure of your project in a visually easy-to-read format. Respects `.gitignore` files when present so ignored files and folders are omitted from the output.
+A Python CLI tool for printing the structure of your project in a visually easy-to-read format. Respects `.gitignore` files when present so ignored files and folders are omitted from the output.
+
+Example output:
+````
+PrintStruct
+├─ LICENSE
+├─ pyproject.toml
+├─ README.md
+├─ requirements.txt
+└─ structure.py
+````
 
 <br>
 
 ## Quick Setup
 
-- Clone or copy this repository.
+- Clone this repository:
 
 ````
 git clone https://github.com/shahzaibahmad05/printstruct
 ````
 
-- Run the script from your project root:
+- Install the project on your system using pip:
 
 ````
-python structure.py <your_project_path>
+pip install -r requirements.txt
 ````
 
-**Note**: It is recommended to put `structure.py` in your *projects* directory, so you can simply do:
+- Open a terminal in any project (any time) and run:
 
 ````
-python structure.py <project_directory_name>
+structure
 ````
+
+This will print the whole structure of the repository as shown.
+
+**Note:** You can also just type:
+ 
+````
+structure <project_directory_path>
+````
+
+in any terminal to get the structure of the project printed.
 
 <br>
 
 ## Useful CLI args
 
-Other than the directory path, here are some CLI args you can use with this script:
+*Other than the directory path*, here are some CLI args you can use with this script:
 
 **--max-depth**
 
