@@ -38,6 +38,15 @@ class GitIgnoreMatcher:
         if path.is_dir() and spec.match_file(rel + "/"):
             return True
         return False
+    
+
+def max_items_int(v: str) -> int:
+    n = int(v)
+    if n < 1 or n > 10000:
+        raise argparse.ArgumentTypeError(
+            "--max-items must be >= 1 and <=10000 (or use --no-limit)"
+        )
+    return n
 
 
 def parse_args() -> argparse.Namespace:
@@ -48,7 +57,7 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--ignore", nargs="*", default=[])
     ap.add_argument("--gitignore-depth", type=int, default=None)
     ap.add_argument("--no-gitignore", action="store_true")
-    ap.add_argument("--max-items", type=int, default=1000, help="Limit items shown per directory (default: 1000)")
+    ap.add_argument("--max-items", type=max_items_int, default=20, help="Limit items shown per directory (default: 20). Use --no-limit for unlimited.")
     ap.add_argument("--no-limit", action="store_true", help="Show all items regardless of count")
     return ap.parse_args()
 
@@ -154,8 +163,8 @@ def draw_tree(
 
         # Show truncation message if items were hidden
         if truncated > 0:
-            connector = LAST
-            print(prefix + connector + f"... and {truncated} more items")
+            # truncation line is always last among displayed items
+            print(prefix + LAST + f"... and {truncated} more items")
 
     if root.is_dir():
         rec(root, "", 0, [])
