@@ -60,7 +60,7 @@ PrintStruct
 To update the tool simply reinstall it with pip, but with the latest release version. Pip will automatically handle old version removal.
 
 
-### Installation (for Contributors):
+## Installation (for Contributors):
 
 - Clone the repository (main branch):
 
@@ -80,7 +80,7 @@ cd PrintStruct
 pip install -r requirements.txt
 ````
 
-and Done! The tool is installed as a python script on your system.
+and Done! The tool is installed as a Python script on your system.
 
 <br>
 
