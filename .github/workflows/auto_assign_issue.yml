@@ -28,7 +28,9 @@ jobs:
             // ✅ Case-insensitive keyword check
             if (
               !body.includes('assign me') &&
-              !body.includes('assign it to me')
+              !body.includes('assign it to me') &&
+              !body.includes('assign this issue to me') &&
+              !body.includes('assign the issue to me')
             ) {
               core.info('No assign keyword found.');
               return;
@@ -63,5 +65,5 @@ jobs:
 
             await github.rest.issues.createComment({
               owner, repo, issue_number,
-              body: `🎉 Thank you for your interest in contributing!\n\n✅ The issue has been assigned to @${assignee}. Happy coding! 🚀`,
+              body: `🎉 Thank you for your interest in contributing!\n\nThe issue has been assigned to @${assignee}. Happy coding!`,
             });
