@@ -23,6 +23,12 @@ def main() -> None:
         print(f"Error: path not found: {root}", file=sys.stderr)
         raise SystemExit(1)
 
+    if args.copy and not pyperclip.is_available():
+        print("Could not find a copy mechanism for your system.")
+        print("If you are on Linux, you need to install 'xclip' (on X11) or 'wl-clipboard' (on Wayland).")
+        print("On other enviroments, you need to install qtpy or PyQt5 via pip.")
+        return
+        
     # If --no-limit is set, disable max_items
     max_items = None if args.no_limit else args.max_items
 
