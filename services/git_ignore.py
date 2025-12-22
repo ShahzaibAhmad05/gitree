@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Optional
 import pathspec
 
+
 class GitIgnoreMatcher:
     def __init__(self, root: Path, enabled: bool = True, *, gitignore_depth: Optional[int] = None):
         self.root = root

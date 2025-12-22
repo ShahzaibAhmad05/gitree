@@ -31,6 +31,7 @@ def get_unused_file_path(root_path: str) -> str:
                 f"could not find unused zip path within {itr} iterations"
             )
 
+
 def iter_dir(directory: Path) -> List[Path]:
     try:
         return list(directory.iterdir())
@@ -44,6 +45,7 @@ def matches_extra(p: Path, root: Path, patterns: List[str]) -> bool:
     except Exception:
         rel = p.name
     return any(fnmatch.fnmatchcase(rel, pat) or fnmatch.fnmatchcase(p.name, pat) for pat in patterns)
+
 
 def get_project_version() -> str:
     """ Get the version of the tool from pyproject.toml """

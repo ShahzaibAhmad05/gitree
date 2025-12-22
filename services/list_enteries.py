@@ -4,6 +4,7 @@ from services.git_ignore import GitIgnoreMatcher
 from utilities.utils import iter_dir, matches_extra
 import pathspec
 
+
 def list_entries(
     directory: Path,
     *,

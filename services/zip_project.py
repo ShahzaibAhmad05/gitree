@@ -6,7 +6,6 @@ import zipfile
 import pathspec
 
 
-
 def zip_project(
     root: Path,
     *,

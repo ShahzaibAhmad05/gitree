@@ -5,6 +5,7 @@ from services.list_enteries import list_entries
 from constants.constant import BRANCH, LAST, SPACE, VERT
 import pathspec
 
+
 def draw_tree(
     root: Path,
     *,
@@ -65,3 +66,4 @@ def draw_tree(
 
     if root.is_dir():
         rec(root, "", 0, [])
+        
