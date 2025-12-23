@@ -4,6 +4,7 @@ from ..utilities.gitignore import GitIgnoreMatcher
 from ..services.list_enteries import list_entries
 from ..constants.constant import BRANCH, LAST, SPACE, VERT
 import pathspec
+from collections import defaultdict  
 
 
 def draw_tree(
@@ -70,4 +71,57 @@ def draw_tree(
 
     if root.is_dir():
         rec(root, "", 0, [])
-        
+
+
+def print_summary(
+    root: Path,
+    *,
+    respect_gitignore: bool = True,
+    gitignore_depth: Optional[int] = None,
+    extra_ignores: Optional[List[str]] = None,
+) -> None:
+    summary = defaultdict(lambda: {"dirs": 0, "files": 0})
+    gi = GitIgnoreMatcher(root, enabled=respect_gitignore, gitignore_depth=gitignore_depth)
+    extra_ignores = extra_ignores or []
+
+    def count(dirpath: Path, current_depth: int, patterns: List[str]):
+        if respect_gitignore and gi.within_depth(dirpath):
+            gi_path = dirpath / ".gitignore"
+            if gi_path.is_file():
+                rel_dir = dirpath.relative_to(root).as_posix()
+                prefix_path = "" if rel_dir == "." else rel_dir + "/"
+                for line in gi_path.read_text(encoding="utf-8", errors="ignore").splitlines():
+                    line = line.strip()
+                    if not line or line.startswith("#"):
+                        continue
+                    neg = line.startswith("!")
+                    pat = line[1:] if neg else line
+                    pat = prefix_path + pat.lstrip("/")
+                    patterns = patterns + [("!" + pat) if neg else pat]
+
+        spec = pathspec.PathSpec.from_lines("gitwildmatch", patterns)
+
+        entries, _ = list_entries(
+            dirpath,
+            root=root,
+            gi=gi,
+            spec=spec,
+            show_all=False,
+            extra_ignores=extra_ignores,
+            max_items=None,
+            ignore_depth=None,
+            no_files=False,
+        )
+
+        for entry in entries:
+            if entry.is_dir():
+                summary[current_depth]["dirs"] += 1
+                count(entry, current_depth + 1, patterns)
+            else:
+                summary[current_depth]["files"] += 1
+
+    count(root, 0, [])
+
+    print("\nDirectory Summary:")
+    for level in sorted(summary):
+        print(f"Level {level}: {summary[level]['dirs']} dirs, {summary[level]['files']} files")
