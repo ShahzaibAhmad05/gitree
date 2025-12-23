@@ -14,7 +14,7 @@ def zip_project(
     extra_ignores: List[str],
     respect_gitignore: bool,
     gitignore_depth: Optional[int],
-    max_depth: Optional[int],
+    depth: Optional[int],
     ignore_depth: Optional[int] = None,
 ) -> None:
     """
@@ -26,8 +26,8 @@ def zip_project(
 
     with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED) as z:
 
-        def rec(dirpath: Path, depth: int, patterns: List[str]) -> None:
-            if max_depth is not None and depth >= max_depth:
+        def rec(dirpath: Path, rec_depth: int, patterns: List[str]) -> None:
+            if depth is not None and rec_depth >= depth:
                 return
 
             # extend patterns with this directory's .gitignore (same logic as draw_tree)
@@ -61,7 +61,7 @@ def zip_project(
 
             for entry in entries:
                 if entry.is_dir():
-                    rec(entry, depth + 1, patterns)
+                    rec(entry, rec_depth + 1, patterns)
                 else:
                     arcname = entry.relative_to(root).as_posix()
                     z.write(entry, arcname)
