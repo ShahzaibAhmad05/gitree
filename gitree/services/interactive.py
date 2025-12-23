@@ -9,7 +9,9 @@ def select_files(
     root: Path,
     respect_gitignore: bool = True,
     gitignore_depth: int = None,
-    extra_ignores: List[str] = None
+    extra_ignores: List[str] = None,
+    include_patterns: List[str] = None,
+    exclude_patterns: List[str] = None
 ) -> Set[str]:
     """
     Scans the directory and prompts the user to select files.
@@ -22,6 +24,16 @@ def select_files(
     
     gi = GitIgnoreMatcher(root, enabled=respect_gitignore, gitignore_depth=gitignore_depth)
     extra_ignores = extra_ignores or []
+
+    # Compile exclude matcher
+    exclude_spec = None
+    if exclude_patterns:
+        exclude_spec = pathspec.PathSpec.from_lines("gitwildmatch", exclude_patterns)
+
+    # Compile include matcher
+    include_spec = None
+    if include_patterns:
+        include_spec = pathspec.PathSpec.from_lines("gitwildmatch", include_patterns)
 
     def collect_files(dirpath: Path, patterns: List[str]):
         if respect_gitignore and gi.within_depth(dirpath):
@@ -58,12 +70,21 @@ def select_files(
             else:
                 # Store relative path for display, but we might want clear distinction
                 rel_path = entry.relative_to(root).as_posix()
+
+                # Filter based on exclude patterns
+                if exclude_spec and exclude_spec.match_file(rel_path):
+                    continue
+                
+                # Filter based on include patterns (if any provided)
+                if include_spec and not include_spec.match_file(rel_path):
+                    continue
+
                 files_to_select.append(questionary.Choice(rel_path, checked=True))
 
     collect_files(root, [])
 
     if not files_to_select:
-        print("No files found to select.")
+        print("No files found to select (check your include/exclude patterns).")
         return set()
 
     selected_rels = questionary.checkbox(

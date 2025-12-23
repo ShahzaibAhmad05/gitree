@@ -21,4 +21,6 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--emoji", action="store_false", help="Show emojis in tree output")
     ap.add_argument("--summary",action="store_true",help="Print a summary of the number of files and folders at each level")
     ap.add_argument("--interactive", "-i", action="store_true", help="Interactive mode: select files to include")
+    ap.add_argument("--include", nargs="*", default=[], help="Patterns of files to include (e.g. *.py)")
+    ap.add_argument("--exclude", nargs="*", default=[], help="Patterns of files to exclude (e.g. *.pyc)")
     return ap.parse_args()

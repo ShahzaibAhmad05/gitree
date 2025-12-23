@@ -53,7 +53,9 @@ def main() -> None:
             root=root,
             respect_gitignore=not args.no_gitignore,
             gitignore_depth=args.gitignore_depth,
-            extra_ignores=args.ignore
+            extra_ignores=args.ignore,
+            include_patterns=args.include,
+            exclude_patterns=args.exclude
         )
         if not selected_files:
             print("No files selected. Exiting.")
