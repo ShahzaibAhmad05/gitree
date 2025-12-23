@@ -4,16 +4,21 @@
 
 <br>
 
-The problems it solves:
+## ✨ Features
 
-* sharing project structure in issues or pull requests
-* generating directory trees for documentation
-* pasting project layouts into LLMs
-* **converting entire codebases to a single json file using `.gitignore` for prompting LLMs.**
+| Feature | Description |
+|---------|-------------|
+| 📊 **Project Tree Visualization** | Generate clean directory trees with customizable depth and formatting |
+| 🗜️ **Smart Zipping** | Create project archives that automatically respect `.gitignore` rules |
+| 🎯 **Flexible Filtering** | Control what's shown with custom ignore patterns, depth limits, and item caps |
+| 🔍 **Gitignore Integration** | Honor `.gitignore` files at any depth level, or disable entirely when needed |
+| 📋 **Multiple Output Formats** | Export to files, copy to clipboard, or display with emoji icons |
+| 📁 **Directory-Only View** | Show just the folder structure without files for high-level overviews |
+| 🚀 **LLM-Ready** | Perfect for providing codebase context to AI assistants and language models |
 
 <br>
 
-## Installation:
+## 📦 Installation
 
 Run this command in your terminal:
 
@@ -22,7 +27,7 @@ Run this command in your terminal:
 pip install gitree       
 ```
 
-### Usage:
+### 💡 Usage
 
 To use this tool, refer to this format:
 
@@ -121,7 +126,7 @@ Pip will automatically replace the older version with the latest release.
 
 <br>
 
-## Useful CLI arguments
+## ⚙️ CLI Arguments
 
 In addition to the directory path, the following options are available:
 
