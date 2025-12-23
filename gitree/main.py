@@ -69,7 +69,7 @@ def main() -> None:
             max_items=max_items,
             ignore_depth=args.ignore_depth,
             no_files=args.no_files,
-            no_emoji=args.no_emoji,
+            emoji=args.emoji,
         )
         if args.out is not None:     # that file output code again
             # Write to file

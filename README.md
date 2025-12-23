@@ -86,7 +86,7 @@ In addition to the directory path, the following options are available:
 | `--max-items`       | Limits items shown per directory. Extra items are summarized as `... and x more items`. Default: `20`. |
 | `--no-limit`        | Removes the per-directory item limit. |
 | `--no-file`         | Hide files from the tree (only show directories) |
-| `--no-emoji`        | Hide emojis from tree output (only show plain tree) |
+| `--emoji`           | Show emojis in tree output |
 
 
 <br>
