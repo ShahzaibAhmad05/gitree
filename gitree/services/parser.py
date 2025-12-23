@@ -18,4 +18,5 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--copy", "-c", action="store_true", help="Copy tree output to clipboard")
     ap.add_argument("--no-limit", action="store_true", help="Show all items regardless of count")
     ap.add_argument("--no-files", action="store_true", help="Hide files from the tree (only show directories)")
+    ap.add_argument("--no-emoji", action="store_true", help="Hide emojis from tree output (only show plain tree)")
     return ap.parse_args()
