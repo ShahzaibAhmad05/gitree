@@ -4,6 +4,7 @@ from ..utilities.gitignore import GitIgnoreMatcher
 from ..services.list_enteries import list_entries
 from ..constants.constant import BRANCH, LAST, SPACE, VERT
 import pathspec
+from collections import defaultdict  
 
 
 def draw_tree(
@@ -70,4 +71,22 @@ def draw_tree(
 
     if root.is_dir():
         rec(root, "", 0, [])
-        
+
+
+def print_summary(root: Path) -> None:
+    """Prints number of directories and files at each level of the directory tree."""
+    summary = defaultdict(lambda: {"dirs": 0, "files": 0})
+
+    def count(dirpath: Path, current_depth: int = 0):
+        for entry in dirpath.iterdir():
+            if entry.is_dir():
+                summary[current_depth]["dirs"] += 1
+                count(entry, current_depth + 1)
+            else:
+                summary[current_depth]["files"] += 1
+
+    count(root)
+
+    print("\nSummary:")
+    for level in sorted(summary.keys()):
+        print(f"Level {level}: {summary[level]['dirs']} dirs, {summary[level]['files']} files")
