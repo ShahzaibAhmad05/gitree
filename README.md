@@ -14,7 +14,7 @@
 | 🔍 **Gitignore Integration** | Honor `.gitignore` files at any depth level, or disable entirely when needed |
 | 📋 **Multiple Output Formats** | Export to files, copy to clipboard, or display with emoji icons |
 | 📁 **Directory-Only View** | Show just the folder structure without files for high-level overviews |
-| 🚀 **LLM-Ready** | Perfect for providing codebase context to AI assistants and language models |
+| 📈 **Project Statistics** | Display file and folder counts at each directory level with summary mode |
 
 <br>
 
@@ -133,16 +133,20 @@ In addition to the directory path, the following options are available:
 | Argument            | Description |
 |---------------------|-------------|
 | `--version`, `-v`   | Displays the installed version. |
-| `--zip [name]`      | Zips the project while respecting `.gitignore`. Example: `--zip a` creates `a.zip`. If no name is provided, a random ID is used. |
 | `--depth`           | Limits recursion depth. Example: `--depth 1` shows only top-level files and folders. |
 | `--all`, `-a`       | Includes hidden files and directories. Does not override `.gitignore`. |
 | `--ignore`          | Adds extra files or directories to ignore. |
+| `--ignore-depth`    | Limits depth for `--ignore` patterns. Example: `--ignore-depth 2` applies ignore rules only to first 2 levels. |
 | `--gitignore-depth` | Controls how deeply `.gitignore` files are discovered. Example: `--gitignore-depth 0` uses only the root `.gitignore`. |
 | `--no-gitignore`    | Ignores all `.gitignore` rules when set. |
 | `--max-items`       | Limits items shown per directory. Extra items are summarized as `... and x more items`. Default: `20`. |
 | `--no-limit`        | Removes the per-directory item limit. |
-| `--no-file`         | Hide files from the tree (only show directories) |
-| `--emoji`           | Show emojis in tree output |
+| `--no-files`        | Hide files from the tree (only show directories). |
+| `--emoji`           | Show emojis in tree output. |
+| `--summary`         | Print a summary of the number of files and folders at each level. |
+| `--zip [name]`, `-z` | Zips the project while respecting `.gitignore`. Example: `--zip a` creates `a.zip`. If no name is provided, a random ID is used. |
+| `--out [file]`, `-o` | Save tree structure to file. Example: `--out tree.txt` or `--out tree.md` for markdown format. |
+| `--copy`, `-c`      | Copy tree output to clipboard. |
 
 
 <br>
