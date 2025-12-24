@@ -18,7 +18,7 @@ def get_default_config() -> Dict[str, Any]:
         "max_items": 20,
         "depth": None,
         "gitignore_depth": None,
-        "ignore_depth": None,
+        "exclude_depth": None,
         "emoji": False,
         "show_all": False,
         "no_gitignore": False,
@@ -34,7 +34,7 @@ def validate_config(config: Dict[str, Any]) -> None:
     Exits with error if validation fails.
     """
     # Define which keys can be None or int
-    optional_int_keys = ["depth", "gitignore_depth", "ignore_depth"]
+    optional_int_keys = ["depth", "gitignore_depth", "exclude_depth"]
 
     for key, value in config.items():
         # Skip unknown keys (forward compatibility)
@@ -44,7 +44,7 @@ def validate_config(config: Dict[str, Any]) -> None:
         # Handle None values
         if value is None:
             # These keys can be None
-            if key in optional_int_keys or key in ["depth", "gitignore_depth", "ignore_depth"]:
+            if key in optional_int_keys or key in ["depth", "gitignore_depth", "exclude_depth"]:
                 continue
             else:
                 print(f"Error: '{key}' cannot be null in config.json", file=sys.stderr)

@@ -12,9 +12,9 @@ def list_entries(
     gi: GitIgnoreMatcher,
     spec: pathspec.PathSpec,
     show_all: bool,
-    extra_ignores: List[str],
+    extra_excludes: List[str],
     max_items: Optional[int] = None,
-    ignore_depth: Optional[int] = None,
+    exclude_depth: Optional[int] = None,
     no_files: bool = False,
 ) -> Tuple[List[Path], int]:
     out: List[Path] = []
@@ -23,7 +23,7 @@ def list_entries(
             continue
         if gi.is_ignored(e, spec):
             continue
-        if matches_extra(e, root, extra_ignores, ignore_depth):
+        if matches_extra(e, root, extra_excludes, exclude_depth):
             continue
         # Filter based on --no-files
         if no_files and e.is_file():

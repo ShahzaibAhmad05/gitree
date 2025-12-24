@@ -41,8 +41,8 @@ def main() -> None:
                 args.max_depth = config["depth"]
             if args.gitignore_depth == defaults["gitignore_depth"] and "gitignore_depth" in config:
                 args.gitignore_depth = config["gitignore_depth"]
-            if args.ignore_depth == defaults["ignore_depth"] and "ignore_depth" in config:
-                args.ignore_depth = config["ignore_depth"]
+            if args.exclude_depth == defaults["exclude_depth"] and "exclude_depth" in config:
+                args.exclude_depth = config["exclude_depth"]
             if args.emoji == defaults["emoji"] and "emoji" in config:  
                 # Note: --emoji flag uses action="store_false" (inverted)
                 # Config uses intuitive naming: true = show emojis
@@ -88,9 +88,8 @@ def main() -> None:
             root=root,
             respect_gitignore=not args.no_gitignore,
             gitignore_depth=args.gitignore_depth,
-            extra_ignores=args.ignore,
-            include_patterns=args.include,
-            exclude_patterns=args.exclude
+            extra_excludes=args.exclude,
+            include_patterns=args.include
         )
         if not selected_files:
             print("No files selected. Exiting.")
@@ -102,10 +101,10 @@ def main() -> None:
             root=root,
             zip_stem=args.zip,
             show_all=args.all,
-            extra_ignores=args.ignore,
+            extra_excludes=args.exclude,
             respect_gitignore=not args.no_gitignore,
             gitignore_depth=args.gitignore_depth,
-            ignore_depth=args.ignore_depth,
+            exclude_depth=args.exclude_depth,
             depth=args.max_depth,
             no_files=args.no_files,
             whitelist=selected_files
@@ -115,11 +114,11 @@ def main() -> None:
             root=root,
             depth=args.max_depth,
             show_all=args.all,
-            extra_ignores=args.ignore,
+            extra_excludes=args.exclude,
             respect_gitignore=not args.no_gitignore,
             gitignore_depth=args.gitignore_depth,
             max_items=max_items,
-            ignore_depth=args.ignore_depth,
+            exclude_depth=args.exclude_depth,
             no_files=args.no_files,
             emoji=args.emoji,
             whitelist=selected_files

@@ -49,7 +49,7 @@ class TestInteractiveMode(unittest.TestCase):
             root=self.root,
             depth=None,
             show_all=False,
-            extra_ignores=[],
+            extra_excludes=[],
             respect_gitignore=False,
             gitignore_depth=None,
             whitelist=whitelist
@@ -81,9 +81,9 @@ class TestInteractiveMode(unittest.TestCase):
             root=self.root,
             zip_stem=zip_stem,
             show_all=False,
-            extra_ignores=[],
+            extra_excludes=[],
             respect_gitignore=False,
-            ignore_depth=None,
+            exclude_depth=None,
             depth=None,
             gitignore_depth=None,
             whitelist=whitelist

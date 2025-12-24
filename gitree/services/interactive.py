@@ -9,26 +9,25 @@ def select_files(
     root: Path,
     respect_gitignore: bool = True,
     gitignore_depth: int = None,
-    extra_ignores: List[str] = None,
-    include_patterns: List[str] = None,
-    exclude_patterns: List[str] = None
+    extra_excludes: List[str] = None,
+    include_patterns: List[str] = None
 ) -> Set[str]:
     """
     Scans the directory and prompts the user to select files.
     Returns a set of selected absolute file paths.
     """
     files_to_select = []
-    
+
     # We need to flatten the tree to a list for the prompt
     # Reusing recursion logic similar to print_summary but collecting paths
-    
-    gi = GitIgnoreMatcher(root, enabled=respect_gitignore, gitignore_depth=gitignore_depth)
-    extra_ignores = extra_ignores or []
 
-    # Compile exclude matcher
+    gi = GitIgnoreMatcher(root, enabled=respect_gitignore, gitignore_depth=gitignore_depth)
+    extra_excludes = extra_excludes or []
+
+    # Compile exclude matcher from extra_excludes
     exclude_spec = None
-    if exclude_patterns:
-        exclude_spec = pathspec.PathSpec.from_lines("gitwildmatch", exclude_patterns)
+    if extra_excludes:
+        exclude_spec = pathspec.PathSpec.from_lines("gitwildmatch", extra_excludes)
 
     # Compile include matcher
     include_spec = None
@@ -58,9 +57,9 @@ def select_files(
             gi=gi,
             spec=spec,
             show_all=False,
-            extra_ignores=extra_ignores,
+            extra_excludes=extra_excludes,
             max_items=None, # Show all potential files for selection
-            ignore_depth=None,
+            exclude_depth=None,
             no_files=False,
         )
 
@@ -68,13 +67,9 @@ def select_files(
             if entry.is_dir():
                 collect_files(entry, patterns)
             else:
-                # Store relative path for display, but we might want clear distinction
+                # Store relative path for display
                 rel_path = entry.relative_to(root).as_posix()
 
-                # Filter based on exclude patterns
-                if exclude_spec and exclude_spec.match_file(rel_path):
-                    continue
-                
                 # Filter based on include patterns (if any provided)
                 if include_spec and not include_spec.match_file(rel_path):
                     continue

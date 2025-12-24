@@ -14,11 +14,11 @@ def draw_tree(
     *,
     depth: Optional[int],
     show_all: bool,
-    extra_ignores: List[str],
+    extra_excludes: List[str],
     respect_gitignore: bool,
     gitignore_depth: Optional[int],
     max_items: Optional[int] = None,
-    ignore_depth: Optional[int] = None,
+    exclude_depth: Optional[int] = None,
     no_files: bool = False,
     emoji: bool = False,
     whitelist: Optional[Set[str]] = None,
@@ -53,9 +53,9 @@ def draw_tree(
             gi=gi,
             spec=spec,
             show_all=show_all,
-            extra_ignores=extra_ignores,
+            extra_excludes=extra_excludes,
             max_items=max_items,
-            ignore_depth=ignore_depth,
+            exclude_depth=exclude_depth,
             no_files=no_files,
         )
 
@@ -111,11 +111,11 @@ def print_summary(
     *,
     respect_gitignore: bool = True,
     gitignore_depth: Optional[int] = None,
-    extra_ignores: Optional[List[str]] = None,
+    extra_excludes: Optional[List[str]] = None,
 ) -> None:
     summary = defaultdict(lambda: {"dirs": 0, "files": 0})
     gi = GitIgnoreMatcher(root, enabled=respect_gitignore, gitignore_depth=gitignore_depth)
-    extra_ignores = extra_ignores or []
+    extra_excludes = extra_excludes or []
 
     def count(dirpath: Path, current_depth: int, patterns: List[str]):
         if respect_gitignore and gi.within_depth(dirpath):
@@ -140,9 +140,9 @@ def print_summary(
             gi=gi,
             spec=spec,
             show_all=False,
-            extra_ignores=extra_ignores,
+            extra_excludes=extra_excludes,
             max_items=None,
-            ignore_depth=None,
+            exclude_depth=None,
             no_files=False,
         )
 
