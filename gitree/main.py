@@ -1,4 +1,3 @@
-# main.py
 from __future__ import annotations
 import sys, io
 if sys.platform.startswith('win'):      # fix windows unicode error on CI
@@ -38,8 +37,8 @@ def main() -> None:
             # Only use config value if arg is still at its default value
             if args.max_items == defaults["max_items"] and "max_items" in config:
                 args.max_items = config["max_items"]
-            if args.depth == defaults["depth"] and "depth" in config:
-                args.depth = config["depth"]
+            if args.max_depth == defaults["depth"] and "depth" in config:
+                args.max_depth = config["depth"]
             if args.gitignore_depth == defaults["gitignore_depth"] and "gitignore_depth" in config:
                 args.gitignore_depth = config["gitignore_depth"]
             if args.ignore_depth == defaults["ignore_depth"] and "ignore_depth" in config:
@@ -107,14 +106,14 @@ def main() -> None:
             respect_gitignore=not args.no_gitignore,
             gitignore_depth=args.gitignore_depth,
             ignore_depth=args.ignore_depth,
-            depth=args.depth,
+            depth=args.max_depth,
             no_files=args.no_files,
             whitelist=selected_files
         )
     else:       # else, print the tree normally
         draw_tree(
             root=root,
-            depth=args.depth,
+            depth=args.max_depth,
             show_all=args.all,
             extra_ignores=args.ignore,
             respect_gitignore=not args.no_gitignore,
