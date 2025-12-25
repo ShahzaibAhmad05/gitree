@@ -4,7 +4,7 @@ from ..utilities.utils import max_items_int, get_unused_file_path
 
 def parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser(description="Print a directory tree (respects .gitignore).")
-    ap.add_argument("path", nargs="?", default=".", help="Root path")
+    ap.add_argument("paths", nargs="*", default=["."], help="Root paths (supports multiple directories and file patterns)")
     ap.add_argument("--max-depth", type=int, default=None, help="Maximum depth to traverse")
     ap.add_argument("-a", "--all", action="store_true")
     ap.add_argument("--ignore", nargs="*", default=[])
@@ -17,6 +17,7 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--json", default=None, metavar="FILE", help="Export tree as JSON to specified file")
     ap.add_argument("--txt", default=None, metavar="FILE", help="Export tree as text to specified file")
     ap.add_argument("--md", default=None, metavar="FILE", help="Export tree as Markdown to specified file")
+    ap.add_argument("-o", "--output", default=None, help="Save tree structure to file")
     ap.add_argument("-c", "--copy", action="store_true", help="Copy tree output to clipboard")
     ap.add_argument("-e", "--emoji", action="store_false", help="Show emojis in tree output")
     ap.add_argument("--summary",action="store_true",help="Print a summary of the number of files and folders at each level")

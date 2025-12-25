@@ -1,0 +1,52 @@
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+import unittest
+import zipfile
+
+
+class TestIOFlags(unittest.TestCase):
+    # Note: There is no test for copy-to-clipboard currently
+    # because real clipboard access is often unavailable/flaky in CI environments.
+
+    def test_entry_point_zip_creates_archive(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            (root / "file.txt").write_text("hello")
+
+            zip_path = root / "output.zip"
+
+            result = subprocess.run(
+                [sys.executable, "-m", "gitree.main", "--zip", zip_path.name],
+                cwd=root,
+                capture_output=True,
+                text=True,
+            )
+
+            self.assertEqual(result.returncode, 0)
+            self.assertTrue(zip_path.exists(), "Zip file was not created")
+
+            with zipfile.ZipFile(zip_path) as zf:
+                names = zf.namelist()
+                self.assertIn("file.txt", names)
+
+    def test_entry_point_output_writes_tree_file(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            (root / "file.txt").write_text("hello")
+
+            out_path = root / "tree_output.txt"
+
+            result = subprocess.run(
+                [sys.executable, "-m", "gitree.main", "--output", out_path.name],
+                cwd=root,
+                capture_output=True,
+                text=True,
+            )
+
+            self.assertEqual(result.returncode, 0)
+            self.assertTrue(out_path.exists(), "Output file was not created")
+
+            content = out_path.read_text()
+            self.assertIn("file.txt", content)

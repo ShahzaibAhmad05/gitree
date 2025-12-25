@@ -210,13 +210,32 @@ Move into the project directory:
 cd Gitree
 ```
 
-Install dependencies:
+Setup a Virtual Environment (to avoid package conflicts):
+
+```
+python -m venv .venv
+```
+
+Activate the virtual environment:
+
+```
+.venv/Scripts/Activate      # on windows
+.venv/bin/activate          # on linux/macOS
+```
+
+If you get an execution policy error on windows, run this:
+
+```
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+Install dependencies in the virtual environment:
 
 ```
 pip install -r requirements.txt
 ```
 
-The tool is now available as a Python CLI on your system.
+The tool is now available as a Python CLI in your virtual environment.
 
 For running directly from main without installing:
 
