@@ -182,7 +182,6 @@ In addition to the directory path, the following options are available:
 | `--version`, `-v`   | Displays the installed version. |
 | `--max-depth`           | Limits recursion depth. Example: `--depth 1` shows only top-level files and folders. |
 | `--all`, `-a`       | Includes hidden files and directories. Does not override `.gitignore`. |
-| `--ignore`          | Adds extra files or directories to ignore. |
 | `--ignore-depth`    | Limits depth for `--ignore` patterns. Example: `--ignore-depth 2` applies ignore rules only to first 2 levels. |
 | `--gitignore-depth` | Controls how deeply `.gitignore` files are discovered. Example: `--gitignore-depth 0` uses only the root `.gitignore`. |
 | `--no-gitignore`    | Ignores all `.gitignore` rules when set. |
@@ -237,10 +236,16 @@ pip install -r requirements.txt
 
 The tool is now available as a Python CLI in your virtual environment.
 
-For running directly from main without installing:
+For running the tool, type (venv should be activated):
 
 ```
-python -m gitree.main
+gitree
+```
+
+For running tests after making any changes:
+
+```
+python -m unittest discover tests
 ```
 
 
