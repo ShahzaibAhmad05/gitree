@@ -98,7 +98,7 @@ def main() -> None:
     # if zipping is requested
     if args.zip is not None:
         import zipfile
-        zip_path = Path(f"{args.zip}.zip").resolve()
+        zip_path = Path(f"{args.zip}.zip" if "." not in args.zip else f"{args.zip}").resolve()
 
         with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED) as z:
             for root in roots:
