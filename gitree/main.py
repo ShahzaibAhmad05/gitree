@@ -48,8 +48,8 @@ def main() -> None:
                 # Config uses intuitive naming: true = show emojis
                 # But args.emoji is inverted: False = show emojis
                 args.emoji = not config["emoji"]
-            if args.all == defaults["show_all"] and "show_all" in config:
-                args.all = config["show_all"]
+            if args.hidden_items == defaults["show_all"] and "show_all" in config:
+                args.hidden_items = config["show_all"]
             if args.no_gitignore == defaults["no_gitignore"] and "no_gitignore" in config:
                 args.no_gitignore = config["no_gitignore"]
             if args.no_files == defaults["no_files"] and "no_files" in config:
@@ -125,7 +125,7 @@ def main() -> None:
                 zip_project_to_handle(
                     z=z,
                     root=root,
-                    show_all=args.all,
+                    show_all=args.hidden_items,
                     extra_excludes=args.exclude,
                     respect_gitignore=not args.no_gitignore,
                     gitignore_depth=args.gitignore_depth,
@@ -161,7 +161,7 @@ def main() -> None:
             draw_tree(
                 root=root,
                 depth=args.max_depth,
-                show_all=args.all,
+                show_all=args.hidden_items,
                 extra_excludes=args.exclude,
                 respect_gitignore=not args.no_gitignore,
                 gitignore_depth=args.gitignore_depth,
@@ -200,7 +200,7 @@ def main() -> None:
             tree_data = build_tree_data(
                 root=root,
                 depth=args.max_depth,
-                show_all=args.all,
+                show_all=args.hidden_items,
                 extra_excludes=args.exclude,
                 respect_gitignore=not args.no_gitignore,
                 gitignore_depth=args.gitignore_depth,

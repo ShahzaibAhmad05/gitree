@@ -6,7 +6,7 @@ def parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser(description="Print a directory tree (respects .gitignore).")
     ap.add_argument("paths", nargs="*", default=["."], help="Root paths (supports multiple directories and file patterns)")
     ap.add_argument("--max-depth", type=int, default=None, help="Maximum depth to traverse")
-    ap.add_argument("-a", "--all", action="store_true")
+    ap.add_argument("--hidden-items", action="store_true")
     ap.add_argument("--exclude", nargs="*", default=[], help="Patterns of files to exclude (e.g. *.pyc, __pycache__)")
     ap.add_argument("--exclude-depth", type=int, default=None, help="Limit depth for --exclude patterns")
     ap.add_argument("--gitignore-depth", type=int, default=None)

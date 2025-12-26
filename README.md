@@ -200,7 +200,7 @@ In addition to the directory path, the following options are available:
 |---------------------|-------------|
 | `--version`, `-v`   | Displays the installed version. |
 | `--max-depth`           | Limits recursion depth. Example: `--depth 1` shows only top-level files and folders. |
-| `--all`, `-a`       | Includes hidden files and directories. Does not override `.gitignore`. |
+| `--hidden-items`    | Includes hidden files and directories. Does not override `.gitignore`. |
 | `--ignore-depth`    | Limits depth for `--ignore` patterns. Example: `--ignore-depth 2` applies ignore rules only to first 2 levels. |
 | `--gitignore-depth` | Controls how deeply `.gitignore` files are discovered. Example: `--gitignore-depth 0` uses only the root `.gitignore`. |
 | `--no-gitignore`    | Ignores all `.gitignore` rules when set. |
