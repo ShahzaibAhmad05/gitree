@@ -216,11 +216,32 @@ In addition to the directory path, the following options are available:
 | `--md [file]`       | Export tree as Markdown to specified file. Example: `--md tree.md`. |
 | `--output [file]`, `-o` | Save tree structure to file. Example: `--output tree.txt` or `--output tree.md` for markdown format. |
 | `--copy`, `-c`      | Copy tree output to clipboard. |
+| `--json [file]`     | Export tree as JSON to specified file. **By default, includes file contents** (up to 1MB per file). |
+| `--txt [file]`      | Export tree as text to specified file. **By default, includes file contents** (up to 1MB per file). |
+| `--md [file]`       | Export tree as Markdown to specified file. **By default, includes file contents** with syntax highlighting (up to 1MB per file). |
+| `--no-contents`     | Don't include file contents when exporting to JSON, TXT, or MD formats. Only the tree structure will be included. |
 | `--interactive`, `-i` | Interactive mode: select files to include using a terminal-based UI. |
 | `--include`         | Patterns of files to include. Example: `--include *.py *.js`. |
 | `--init-config`     | Create a default `config.json` file in the current directory. |
 | `--config-user`     | Open `config.json` in the default editor. |
 | `--no-config`       | Ignore `config.json` and use hardcoded defaults. |
+
+
+## 📝 File Contents in Exports
+
+When using `--json`, `--txt`, or `--md` flags, **file contents are included by default**. This feature:
+
+- ✅ Includes text file contents (up to 1MB per file)
+- ✅ Detects and marks binary files as `[binary file]`
+- ✅ Handles large files by marking them as `[file too large: X.XXmb]`
+- ✅ Uses syntax highlighting in Markdown format based on file extension
+- ✅ Works with all filtering options (`--exclude`, `--include`, `.gitignore`, etc.)
+
+To export only the tree structure without file contents, use the `--no-contents` flag:
+
+```bash
+gitree --json output.json --no-contents
+```
 
 
 ## Installation (for Contributors)
