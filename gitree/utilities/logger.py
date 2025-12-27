@@ -11,7 +11,9 @@ class Logger:
     """
 
     def __init__(self):
-        """Initialize the logger with an empty message list."""
+        """
+        Initialize the logger with an empty message list.
+        """
         self._messages: List[str] = []
 
     def log(self, message: str) -> None:
