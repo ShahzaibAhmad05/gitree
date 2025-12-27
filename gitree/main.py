@@ -20,6 +20,10 @@ def main() -> None:
     functionality including tree printing, zipping, and file exports.
     """
     args = parse_args()
+    
+    # Resolve --no-contents-for paths
+    no_contents_for = [Path(p).resolve() for p in args.no_contents_for]
+
 
     # Handle config + version commands that exit immediately
     if args.init_config:
@@ -240,7 +244,8 @@ def main() -> None:
                 whitelist=selected_files,
                 include_patterns=args.include,
                 include_file_types=include_file_types,
-                include_contents=include_contents
+                include_contents=include_contents,
+                no_contents_for=no_contents_for
             )
 
             write_outputs(
