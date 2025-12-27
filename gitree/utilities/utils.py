@@ -59,8 +59,9 @@ def iter_dir(directory: Path) -> List[Path]:
 
 
 def matches_extra(p: Path, root: Path, patterns: List[str], ignore_depth: Optional[int] = None) -> bool:
-    """Check if path matches any of the extra ignore patterns using gitignore-style matching."""
-
+    """
+    Check if path matches any of the extra ignore patterns using gitignore-style matching.
+    """
     # If no patterns provided, nothing matches
     if not patterns:
         return False
@@ -93,7 +94,8 @@ def matches_extra(p: Path, root: Path, patterns: List[str], ignore_depth: Option
 
 
 def matches_file_type(p: Path, file_types: List[str]) -> bool:
-    """Check if path matches any of the specified file types (extensions).
+    """
+    Check if path matches any of the specified file types (extensions).
 
     Args:
         p: Path to check
@@ -131,7 +133,6 @@ def copy_to_clipboard(text: str) -> bool:
     Returns:
       True if successful, False otherwise.
     """
-
     try:        # Try pyperclip
         pyperclip.copy(text)
         return True
