@@ -8,12 +8,16 @@ from typing import Dict, Any, Optional
 
 
 def get_config_path() -> Path:
-    """Returns the path to config.json in the current directory."""
+    """
+    Returns the path to config.json in the current directory.
+    """
     return Path("config.json")
 
 
 def get_default_config() -> Dict[str, Any]:
-    """Returns the default configuration values."""
+    """
+    Returns the default configuration values.
+    """
     return {
         "max_items": 20,
         "depth": None,
@@ -103,7 +107,9 @@ def load_config() -> Optional[Dict[str, Any]]:
 
 
 def create_default_config() -> None:
-    """Creates a default config.json file with all defaults and comments."""
+    """
+    Creates a default config.json file with all defaults and comments.
+    """
     config_path = get_config_path()
 
     if config_path.exists():
@@ -127,7 +133,9 @@ def create_default_config() -> None:
 
 
 def open_config_in_editor() -> None:
-    """Opens config.json in the default text editor."""
+    """
+    Opens config.json in the default text editor.
+    """
     config_path = get_config_path()
 
     # Create config if it doesn't exist

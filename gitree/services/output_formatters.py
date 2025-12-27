@@ -132,7 +132,9 @@ def build_tree_data(
 
 
 def format_json(tree_data: Dict[str, Any]) -> str:
-    """Convert tree data to JSON string with proper indentation."""
+    """
+    Convert tree data to JSON string with proper indentation.
+    """
     return json.dumps(tree_data, indent=2, ensure_ascii=False)
 
 
