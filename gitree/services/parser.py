@@ -66,7 +66,7 @@ def parse_args() -> argparse.Namespace:
         help="Limit items shown per directory (use --no-limit for unlimited)",
     )
     ap.add_argument(
-        "--zip",
+        "-z", "--zip",
         default=argparse.SUPPRESS,
         help="Create a zip file containing files under path (respects .gitignore)",
     )
@@ -89,12 +89,12 @@ def parse_args() -> argparse.Namespace:
         help="Export tree as Markdown to specified file",
     )
     ap.add_argument(
-        "--output",
+        "-o", "--output",
         default=argparse.SUPPRESS,
         help="Save tree structure to file",
     )
     ap.add_argument(
-        "--copy",
+        "-c", "--copy",
         action="store_true",
         default=argparse.SUPPRESS,
         help="Copy tree output to clipboard",
@@ -102,22 +102,20 @@ def parse_args() -> argparse.Namespace:
 
     # NOTE: inverted flag (store_false)
     ap.add_argument(
-        "-e",
-        "--emoji",
+        "-e", "--emoji",
         action="store_false",
         default=argparse.SUPPRESS,
         help="Show emojis in tree output, default is false",
     )
 
     ap.add_argument(
-        "--summary",
+        "-s", "--summary",
         action="store_true",
         default=argparse.SUPPRESS,
         help="Print a summary of the number of files and folders at each level",
     )
     ap.add_argument(
-        "-i",
-        "--interactive",
+        "-i", "--interactive",
         action="store_true",
         default=argparse.SUPPRESS,
         help="Interactive mode: select files to include",
@@ -161,8 +159,7 @@ def parse_args() -> argparse.Namespace:
 
     # Control / meta flags (not config-backed)
     ap.add_argument(
-        "-v",
-        "--version",
+        "-v", "--version",
         action="store_true",
         help="Display the version of the tool",
     )

@@ -1,3 +1,4 @@
+# main.py
 from __future__ import annotations
 import sys, io, glob
 if sys.platform.startswith('win'):      # fix windows unicode error on CI
