@@ -135,11 +135,11 @@ class DrawingService:
 
             # Only print this ONCE: at the very end of the whole output (root call)
             if prefix == "" and truncated_entries:
-                msg = "... and more entries (max entries reached)"
+                msg = "... and more entries"
                 if config.no_color:
-                    ctx.output_buffer.write(f"\n{msg}")
+                    ctx.output_buffer.write(f"{msg}")
                 else:
-                    ctx.output_buffer.write(f"\n{Color.grey(msg)}")
+                    ctx.output_buffer.write(f"{Color.grey(msg)}")
 
 
         _rec(tree_data, "", bool(tree_data.get("truncated_entries", False)))
