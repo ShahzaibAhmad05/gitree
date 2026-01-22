@@ -143,6 +143,7 @@ class ItemsSelectionService:
 
         # Vars to be used by the inner recursive function
         curr_entries: int = 0
+        truncated_entries: bool = False
         
 
         def _resolve_items_rec(ctx: AppContext, config: Config, *,
@@ -150,10 +151,11 @@ class ItemsSelectionService:
             exclude_paths: list[Path], start_time: float,
             gitignore_matcher: GitIgnoreMatcher) -> dict[str, Any]:
 
-            nonlocal curr_entries
+            nonlocal curr_entries, truncated_entries
 
             resolved_root: dict[str, Any] = {
                 "self": curr_dir,
+                "remaining_items": 0,   # changed if items are truncated later
                 "children": []
             }
             ctx.logger.log(Logger.DEBUG, 
@@ -215,8 +217,13 @@ class ItemsSelectionService:
 
                 # If reached --max-items or --max-entries, then exit
                 # NOTE: This is ok for now, but needs to be corrected later
-                if ((not config.no_max_items and items_added >= config.max_items) or
-                    (not config.no_max_entries and curr_entries >= config.max_entries)): 
+                if (not config.no_max_items and items_added >= config.max_items):
+                    resolved_root["remaining_items"] = len(children_to_add) - items_added
+                    break
+                    
+                if (curr_depth > 0 and not config.no_max_entries and 
+                    curr_entries >= config.max_entries):
+                    truncated_entries = True
                     break
 
 
@@ -240,29 +247,32 @@ class ItemsSelectionService:
                 # if within include depth and the item is in includes 
                 if (ItemsSelectionService._isunder(item_path, resolved_include_paths)):
                         
-                        items_added += 1
-                        curr_entries += 1  
-                        
-                        # If the item is a file then append directly, else resolve for it
-                        if item_path.is_file():
-                            resolved_root["children"].append(item_path)
+                    items_added += 1
+                    curr_entries += 1  
+                    
+                    # If the item is a file then append directly, else resolve for it
+                    if item_path.is_file():
+                        resolved_root["children"].append(item_path)
 
-                        else:      
-                            resolved_dir = _resolve_items_rec(
-                                ctx, config, resolved_include_paths=resolved_include_paths, curr_dir=item_path, gitignore_matcher=gitignore_matcher, start_time=start_time,
-                                exclude_paths=exclude_paths, curr_depth=curr_depth+1)
-                                
-                            resolved_root["children"].append(resolved_dir)
+                    else:      
+                        resolved_dir = _resolve_items_rec(
+                            ctx, config, resolved_include_paths=resolved_include_paths, curr_dir=item_path, gitignore_matcher=gitignore_matcher, start_time=start_time,
+                            exclude_paths=exclude_paths, curr_depth=curr_depth+1)
+                            
+                        resolved_root["children"].append(resolved_dir)
                             
             return resolved_root
         
 
         # Use the inner recursive function
-        return _resolve_items_rec(ctx, config, resolved_include_paths=resolved_include_paths, 
+        resolved_root = _resolve_items_rec(ctx, config,                     
+            resolved_include_paths=resolved_include_paths, 
             curr_dir=curr_dir, curr_depth=curr_depth,
             exclude_paths=exclude_paths, start_time=start_time, 
             gitignore_matcher=gitignore_matcher)
-
+        resolved_root["truncated_entries"] = truncated_entries
+        
+        return resolved_root
 
     @staticmethod
     def _dir_path_under_given_paths(config: Config, dir_path: Path) -> bool:
