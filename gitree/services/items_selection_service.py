@@ -132,7 +132,7 @@ class ItemsSelectionService:
     def _resolve_items_rec_wrapper(ctx: AppContext, config: Config, *,
         resolved_include_paths: list[Path], curr_dir: Path, curr_depth: int, 
         exclude_paths: list[Path], start_time: float,
-        gitignore_matcher: GitIgnoreMatcher) -> tuple[dict[str, Any], int]:
+        gitignore_matcher: GitIgnoreMatcher) -> dict[str, Any]:
         """
         Resolve the paths recursively.
 
@@ -148,7 +148,7 @@ class ItemsSelectionService:
         def _resolve_items_rec(ctx: AppContext, config: Config, *,
             resolved_include_paths: list[Path], curr_dir: Path, curr_depth: int, 
             exclude_paths: list[Path], start_time: float,
-            gitignore_matcher: GitIgnoreMatcher) -> tuple[dict[str, Any], int]:
+            gitignore_matcher: GitIgnoreMatcher) -> dict[str, Any]:
 
             nonlocal curr_entries
 
@@ -162,7 +162,7 @@ class ItemsSelectionService:
 
             # Implementation for --max-depth
             if curr_depth > config.max_depth - 1:
-                return resolved_root, curr_entries
+                return resolved_root
             
 
             # Determine whether the current directory is under the given paths
