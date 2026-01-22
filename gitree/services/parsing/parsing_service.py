@@ -125,10 +125,10 @@ class ParsingService:
 
 
         # Implementation for --only-types flag
-        if getattr(args, "only-types", None):
+        if getattr(args, "only_types", None):
             args.paths = []
             exts = []
-            for e in args.code:
+            for e in args.only_types:
                 e = e.lower().lstrip(".")
                 if e:
                     exts.append(e)
