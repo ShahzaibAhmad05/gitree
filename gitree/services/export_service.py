@@ -40,6 +40,7 @@ class ExportService:
         output_path.write_text("\n".join(lines), encoding="utf-8")
 
         ctx.output_buffer.clear()
+        print(f"Output saved to {output_path.absolute()}")
 
 
     @staticmethod

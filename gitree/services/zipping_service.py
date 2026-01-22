@@ -50,6 +50,8 @@ class ZippingService:
                     zf.write(fp, arcname=arcname)
                 except Exception:
                     continue
+        
+        print(f"Output saved to {zip_path.absolute()}")
 
 
     @staticmethod

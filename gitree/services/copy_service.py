@@ -50,3 +50,4 @@ class CopyService:
             ctx.logger.log(Logger.ERROR, f"Failed to copy to clipboard: {e}")
 
         ctx.output_buffer.clear()
+        print(f"Output copied to clipboard successfully.")
