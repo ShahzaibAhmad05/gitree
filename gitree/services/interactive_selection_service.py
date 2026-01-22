@@ -12,7 +12,7 @@ Works on the already-resolved tree produced by ItemsSelectionService (resolved_r
 }
 
 UI (ANSI):
-- ↑/↓ move, PageUp/PageDown jump
+- ↑/↓ move
 - Space toggle (dirs toggle recursively)
 - Enter confirm, Ctrl+C exit (returns current selection)
 
@@ -21,7 +21,8 @@ Default behavior:
 - Dirs are derived as checked if all descendant files are checked; otherwise partial.
 
 Viewport behavior:
-- Shows a fixed number of lines (VIEWPORT_LINES) for the list area (not counting header/footer).
+- Uses up to VIEWPORT_LINES for list area, but CLAMPS to terminal height so rendering never
+  prints more lines than the terminal can show (prevents scroll-on-render).
 - Re-renders in-place using ANSI cursor positioning (no full-screen clears per keypress).
 
 Enhancements:
@@ -48,11 +49,8 @@ from ..objects.config import Config
 
 CSI = "\x1b["
 
-# Fixed viewport height (list area only).
-VIEWPORT_LINES = 15
-
-# Jump size for PgUp/PgDn (keep consistent with viewport height)
-PAGE_JUMP = VIEWPORT_LINES
+# Maximum viewport height (list area only). Actual viewport clamps to terminal rows.
+VIEWPORT_LINES = 999
 
 _ANSI_RE = re.compile(r"\x1b\[[0-9;?]*[A-Za-z]")
 
@@ -186,7 +184,7 @@ class _RawMode:
 def _read_key() -> str:
     """
     Returns normalized key names:
-      'UP','DOWN','PGUP','PGDN','SPACE','ENTER','CTRL_C'
+      'UP','DOWN','SPACE','ENTER','CTRL_C'
     or '' if unknown.
     """
     if os.name == "nt":
@@ -204,8 +202,6 @@ def _read_key() -> str:
             return {
                 "H": "UP",    # arrow up
                 "P": "DOWN",  # arrow down
-                "I": "PGUP",  # page up
-                "Q": "PGDN",  # page down
             }.get(ch2, "")
         return ""
 
@@ -228,18 +224,15 @@ def _read_key() -> str:
         return "UP"
     if code == "B":
         return "DOWN"
-    if code in ("5", "6"):
-        tilde = sys.stdin.read(1)
-        if tilde == "~":
-            return "PGUP" if code == "5" else "PGDN"
+
+    # Anything else (including PgUp/PgDn sequences) is ignored.
     return ""
 
 
 class InteractiveSelectionService:
     @staticmethod
     def run(ctx: AppContext, config: Config, resolved_root: Dict[str, Any]) -> Dict[str, Any]:
-        # One initial clear; after that we re-render in-place (no scrollback spam).
-        # sys.stdout.write(_ansi_clear_screen())
+        os.system("cls" if os.name == "nt" else "clear")
         sys.stdout.flush()
 
         # Build a flat view tree from already-resolved_root (no filesystem scanning)
@@ -299,13 +292,33 @@ class InteractiveSelectionService:
             ratio = scroll / denom
             return int(round(ratio * (view_h - 1)))
 
+        def _compute_view_h(term_rows: int) -> int:
+            """
+            Ensure our whole UI block fits in the terminal to prevent scrolling.
+
+            We print:
+              header (1)
+              top border (1)
+              viewport lines (view_h)
+              bottom border (1)
+              footer (1)
+            => view_h + 4 total lines
+
+            Clamp view_h so (view_h + 4) <= term_rows.
+            """
+            min_rows_for_ui = 5  # gives view_h=1
+            if term_rows < min_rows_for_ui:
+                return 1
+            max_h_by_term = max(1, term_rows - 4)
+            return max(1, min(VIEWPORT_LINES, max_h_by_term))
+
         def render() -> None:
             nonlocal scroll, first_render
 
-            cols, _rows = _term_size()
+            cols, rows = _term_size()
 
-            # Fixed viewport height (list area). Also guard for tiny terminals.
-            view_h = max(1, min(VIEWPORT_LINES, 1000))
+            # Clamp viewport height to terminal rows so we never scroll when rendering.
+            view_h = _compute_view_h(rows)
 
             if cursor < scroll:
                 scroll = cursor
@@ -323,7 +336,7 @@ class InteractiveSelectionService:
                     if it["checked"]:
                         selected_count += 1
 
-            header = "↑/↓ Move | PgUp/PgDn Jump | Space Toggle | Enter Confirm | Ctrl+C Exit"
+            header = "↑/↓ Move | Space Toggle | Enter Confirm | Ctrl+C Exit"
             header = header[:cols]
             footer = f"Selected files: {selected_count}/{total_files}"
             footer = footer[:cols]
@@ -408,9 +421,9 @@ class InteractiveSelectionService:
             sys.stdout.write(_ansi_clear_line())
             sys.stdout.write("└" + ("─" * inner_w) + "┘" + "\n")
 
-            # FOOTER
+            # FOOTER (NO trailing newline to reduce accidental scroll on tight terminals)
             sys.stdout.write(_ansi_clear_line())
-            sys.stdout.write(_ansi_dim(footer) + "\n")
+            sys.stdout.write(_ansi_dim(footer))
 
             # Clear anything below our block (so resizing / prior prints don't linger)
             sys.stdout.write(_ansi_clear_to_end())
@@ -447,16 +460,6 @@ class InteractiveSelectionService:
                         render()
                         continue
 
-                    if k == "PGUP":
-                        cursor = max(0, cursor - PAGE_JUMP)
-                        render()
-                        continue
-
-                    if k == "PGDN":
-                        cursor = min(len(tree) - 1, cursor + PAGE_JUMP)
-                        render()
-                        continue
-
                     if k == "SPACE":
                         item = tree[cursor]
                         if item["type"] == "dir":
@@ -476,6 +479,7 @@ class InteractiveSelectionService:
             sys.stdout.write(CSI + "0m")
             sys.stdout.write("\n")
             sys.stdout.flush()
+            os.system("cls" if os.name == "nt" else "clear")
 
     @staticmethod
     def _collect_files(resolved_node: Dict[str, Any]) -> Set[Path]:
@@ -521,31 +525,37 @@ class InteractiveSelectionService:
 
         children = resolved_node.get("children", [])
         for child in children:
-            if isinstance(child, dict):
-                child_index = len(tree)
-                folder_to_subdirs[folder_index].append(child_index)
-                InteractiveSelectionService._build_tree_from_resolved(
-                    resolved_node=child,
-                    root=root,
-                    depth=depth + 1,
-                    tree=tree,
-                    folder_to_files=folder_to_files,
-                    folder_to_subdirs=folder_to_subdirs,
-                    default_checked_files=default_checked_files,
-                )
-            else:
-                child_path = child if isinstance(child, Path) else Path(str(child))
-                rel_path = child_path.relative_to(root).as_posix()
-                file_index = len(tree)
+            if not isinstance(child, dict):
+                continue
 
-                tree.append({
-                    "type": "file",
-                    "abs_path": child_path,
-                    "name": rel_path.split("/")[-1],
-                    "depth": depth + 1,
-                    "checked": (child_path in default_checked_files),
-                })
-                folder_to_files[folder_index].append(file_index)
+            child_index = len(tree)
+            folder_to_subdirs[folder_index].append(child_index)
+            InteractiveSelectionService._build_tree_from_resolved(
+                resolved_node=child,
+                root=root,
+                depth=depth + 1,
+                tree=tree,
+                folder_to_files=folder_to_files,
+                folder_to_subdirs=folder_to_subdirs,
+                default_checked_files=default_checked_files,
+            )
+
+        for child in children:
+            if isinstance(child, dict):
+                continue
+            
+            child_path = child if isinstance(child, Path) else Path(str(child))
+            rel_path = child_path.relative_to(root).as_posix()
+            file_index = len(tree)
+
+            tree.append({
+                "type": "file",
+                "abs_path": child_path,
+                "name": rel_path.split("/")[-1],
+                "depth": depth + 1,
+                "checked": (child_path in default_checked_files),
+            })
+            folder_to_files[folder_index].append(file_index)
 
     @staticmethod
     def _sync_dir_states(
