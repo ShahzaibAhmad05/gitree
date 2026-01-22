@@ -10,7 +10,7 @@ if sys.platform.startswith('win'):      # fix windows unicode error on CI
     sys.stdout.reconfigure(encoding='utf-8')
 
 # Deps from this project
-from .services.parsing_service import ParsingService
+from .services.parsing import ParsingService
 from .services.general_options_service import GeneralOptionsService
 from .services.items_selection_service import ItemsSelectionService
 from .services.drawing_service import DrawingService

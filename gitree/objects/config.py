@@ -89,6 +89,7 @@ class Config:
 
         return {
             # General Options
+            "help": False,
             "version": False,
             "config_user": False,
             "no_config": False,

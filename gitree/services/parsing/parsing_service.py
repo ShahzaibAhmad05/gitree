@@ -1,4 +1,4 @@
-# gitree/services/parsing_service.py
+# gitree/services/parsing/parsing_service.py
 
 """
 Code file for housing ParsingService class. Includes arguments adding,
@@ -7,14 +7,17 @@ correction, and processing for argparse.
 
 # Default libs
 import argparse
+import sys
 
 # Dependencies
 from pathlib import Path
 
 # Imports from this project
-from ..utilities.functions_utility import max_items_int, max_entries_int
-from ..objects.config import Config
-from ..objects.app_context import AppContext
+from ...utilities.functions_utility import max_items_int, max_entries_int
+from ...utilities.color_utility import Color
+from ...objects.config import Config
+from ...objects.app_context import AppContext
+from .rich_help_formatter import RichHelpFormatter
 
 
 class ParsingService:
@@ -33,11 +36,16 @@ class ParsingService:
         Returns:
             Config: Configuration object to be used in-place of args
         """
+        
+        # Handle help flag early before argparse processes it
+        if '-h' in sys.argv or '--help' in sys.argv:
+            formatter = RichHelpFormatter('gt')
+            formatter.format_help()
 
         ap = argparse.ArgumentParser(
             description="Print a directory tree (respects .gitignore).",
-            formatter_class=argparse.RawTextHelpFormatter,
-            epilog=ParsingService._examples_text()
+            formatter_class=RichHelpFormatter,
+            add_help=False  # Disable default help to use our custom one
         )
 
         ParsingService._add_positional_args(ctx, ap)
@@ -129,44 +137,6 @@ class ParsingService:
                 path = path.with_suffix(default_extensions[format_str])
 
         return str(path)
-    
-
-    @staticmethod
-    def _examples_text() -> str:
-        return """
-            Usage:
-            - gitree first selects the items (files/dirs) using the path 
-                given, then decides whether to zip/export the project
-                (with contents), or to just print the tree structure of the
-                project.
-
-            - It respects gitignore rules by default unless --no-gitignore
-                is used.
-        
-                
-            Use-case Examples:
-
-            gitree
-                Print tree structure of current directory
-
-            gitree tests/*.py --copy
-                Select all .py files under the folder tests and 
-                copy their contents along with the tree structure,
-                useful for pasting codebase context to LLMs.
-
-            gitree tests .github
-                Select items only under these two folders, find 
-                their parent folder, and print the tree structure
-                for those.
-
-            gitree --export proj --format json
-                Export all items and their contents under the current 
-                directory in a file named proj.json
-
-            gitree --zip project
-                Create a zip named project.zip of the whole project 
-                respecting gitignore rules.
-        """.strip()
 
 
     @staticmethod
@@ -182,7 +152,11 @@ class ParsingService:
 
     @staticmethod
     def _add_general_options(ctx: AppContext, ap: argparse.ArgumentParser):
-        general = ap.add_argument_group("general options")
+        general = ap.add_argument_group("GENERAL OPTIONS")
+        
+        general.add_argument("-h", "--help", action="store_true",
+            default=argparse.SUPPRESS,
+            help="Show this help message and exit")
         
         general.add_argument("-v", "--version", action="store_true",
             default=argparse.SUPPRESS,
@@ -312,6 +286,7 @@ class ParsingService:
             default=argparse.SUPPRESS, help="Hide files (show only directories)")
 
 
+    @staticmethod
     def _add_shortcut_flags(ctx: AppContext, ap: argparse.ArgumentParser):
         """
         Add shortcut flags that map to other flags for ease of use.
@@ -320,4 +295,3 @@ class ParsingService:
         ap.add_argument("-f", "--full", action="store_true",
             default=argparse.SUPPRESS,
             help="Shortcut for --max-depth 5 in the output")
-        
