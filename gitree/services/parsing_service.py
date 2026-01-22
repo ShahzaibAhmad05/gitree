@@ -45,6 +45,7 @@ class ParsingService:
         ParsingService._add_io_flags(ctx, ap)
         ParsingService._add_listing_flags(ctx, ap)
         ParsingService._add_listing_control_flags(ctx, ap)
+        ParsingService._add_shortcut_flags(ctx, ap)
 
         args = ap.parse_args()
         ctx.logger.log(ctx.logger.DEBUG, f"Parsed arguments: {args}")
@@ -102,6 +103,8 @@ class ParsingService:
 
         if getattr(args, "zip", None) is not None:
             args.zip = ParsingService._fix_output_path(ctx, args.zip, default_extension=".zip")
+        if getattr(args, "full", False):
+            args.max_depth = 5
 
         ctx.logger.log(ctx.logger.DEBUG, f"Corrected arguments: {args}")
 
@@ -302,3 +305,14 @@ class ParsingService:
         
         listing_control.add_argument("--no-files", action="store_true", 
             default=argparse.SUPPRESS, help="Hide files (show only directories)")
+
+
+    def _add_shortcut_flags(ctx: AppContext, ap: argparse.ArgumentParser):
+        """
+        Add shortcut flags that map to other flags for ease of use.
+        """
+
+        ap.add_argument("-f", "--full", action="store_true",
+            default=argparse.SUPPRESS,
+            help="Shortcut for --max-depth 5 in the output")
+        
