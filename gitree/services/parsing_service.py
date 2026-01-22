@@ -198,7 +198,7 @@ class ParsingService:
             help="Ignore both user-level and global-level config.json and use"
                 " default and cli values for configuration")
         
-        general.add_argument("--verbose", action="store_true", 
+        general.add_argument("--verbose", "--log", action="store_true", 
             default=argparse.SUPPRESS, 
             help="Enable logger output to the console. Enabling this prints a log"
             " after the full workflow run. Helpful for debugging.")

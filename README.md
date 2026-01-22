@@ -192,7 +192,7 @@ The following optional arguments are available for use:
 | `--version`, `-v` | Display the **version number** of the tool.                                                                       |
 | `--config-user`   | Create a **default config.json** file in the current directory and open that file in the **default editor**.        |
 | `--no-config`     | Ignore both **user-level and global-level** `config.json` and use **default and CLI values** for configuration.       |
-| `--verbose`       | Enable **logger output** to the console. Enabling this prints a log after the full workflow run. Helpful for **debugging**. |
+| `--verbose`, `--log` | Enable **logger output** to the console. Enabling this prints a log after the full workflow run. Helpful for **debugging**. |
 
 ### Output & Export Options
 
