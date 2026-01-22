@@ -221,7 +221,7 @@ class ItemsSelectionService:
                     resolved_root["remaining_items"] = len(children_to_add) - items_added
                     break
                     
-                if (curr_depth > 0 and not config.no_max_entries and 
+                if (not config.no_max_entries and 
                     curr_entries >= config.max_entries):
                     truncated_entries = True
                     break
