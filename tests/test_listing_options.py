@@ -83,6 +83,17 @@ class TestListingFlags(BaseCLISetup):
         self.assertIn(".hidden_file.txt", result_with_flag.stdout)
         self.assertIn(".hidden_dir", result_with_flag.stdout)
 
+        # Test with --all flag (alias for --hidden-items)
+        result_with_all = self.run_gitree("--all")
+
+        self.assertEqual(result_with_all.returncode, 0, msg=result_with_all.stderr)
+        self.assertTrue(result_with_all.stdout.strip())
+        self.assertIn("file.txt", result_with_all.stdout)
+        self.assertIn(".hidden_file.txt", result_with_all.stdout)
+        self.assertIn(".hidden_dir", result_with_all.stdout)
+
+        # Ensure both flags behave the same
+        self.assertEqual(result_with_flag.stdout, result_with_all.stdout)
 
     def test_files_first(self):
         """
