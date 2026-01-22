@@ -31,6 +31,7 @@ classifiers = [
 
 [project.scripts]
 gitree = "gitree.main:main"
+gt = "gitree.main:main"
 
 [project.urls]
 Homepage = "https://github.com/ShahzaibAhmad05/gitree"
