@@ -1,6 +1,10 @@
 # gitree 🌴
 
-**A CLI tool that helps generate structured context for LLMs by combining project files into a single, exportable format.**
+**A replacement of "ls" for developers. A python tool to analyze folder structures and to provide code context to LLMs. Published on PyPi**
+
+
+> [!NOTE]
+> You may use "gt" to call this tool, instead of the full-name "gitree"
 
 <br>
 
@@ -25,6 +29,9 @@ Install using **pip** (python package manager):
 # Install the latest version using pip
 pip install gitree
 
+# Alternatively, use pipx
+pipx install gitree
+
 # to update gitree
 pip install -U gitree
 ```
@@ -33,48 +40,40 @@ pip install -U gitree
 
 ### 💡 Usage
 
-To use this tool, refer to this **format**:
-
-```bash
-gitree [paths] [other CLI args/flags]
-```
-
 **To literally get started, I would recommend doing this:**
 
 Open a terminal in any project and run:
 
 ```bash
-# paths should default to .
+# paths should default to the current working directory
 # This will scan gitignores by default
 gitree
+
+# OR use this short alias
+gt
 ```
+
+<img
+  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/default_demo.gif"
+  alt="gitree demo"
+  width="600"
+/>
 
 Now try this for better visuals:
 
 ```bash
-gitree --emoji
+gt --emoji
+
+# OR -e as alias for --emoji
+gt -e
 ```
 
-You _should_ see an output like this:
+You will see an output similar to this:
 
 ```text
-Gitree
-├─ 📂 gitree/
-│  ├─ 📂 constants/
-│  │  ├─ 📄 __init__.py
-│  │  └─ 📄 constant.py
-│  ├─ 📂 services/
-│  │  ├─ 📄 __init__.py
-│  │  ├─ 📄 draw_tree.py
-│  │  ├─ 📄 list_enteries.py
-│  │  ├─ 📄 parser.py
-│  │  └─ 📄 zip_project.py
-│  ├─ 📂 utilities/
-│  │  ├─ 📄 __init__.py
-│  │  ├─ 📄 gitignore.py
-│  │  └─ 📄 utils.py
-│  ├─ 📄 __init__.py
-│  └─ 📄 main.py
+📂 gitree
+├─ 📁 gitree
+├─ 📁 tests
 ├─ 📄 CODE_OF_CONDUCT.md
 ├─ 📄 CONTRIBUTING.md
 ├─ 📄 LICENSE
@@ -84,12 +83,24 @@ Gitree
 └─ 📄 SECURITY.md
 ```
 
-Some useful commands you can use everyday with this tool:
+For printing the full structure of any directory or project:
+
+```
+gt --full
+
+# OR -f as alias for --full
+gt -f
+```
+
+Some useful commands you can use with this tool (for LLM prompting):
 
 ```bash
 # Copy all C++ code in your project, 
 # with interactive selection for those files
-gitree **/*.cpp --copy -i
+gt **/*.cpp --copy -i
+
+# For React-based frontend projects
+gt --exclude **/*.json
 ```
 
 ```bash
@@ -99,7 +110,7 @@ gitree --zip project
 ```
 
 ```bash
-# Export the file contents of your project, in different formats to choose from
+# Export the file contents of your project, in different formats
 gitree --export project --format tree
 gitree --export project --format json
 gitree --export project --format md
@@ -107,7 +118,7 @@ gitree --export project --format md
 
 ---
 
-## 🧩 How it Works
+## 🧩 How it works
 
 ```
     ╭────────────────────────────╮
@@ -155,8 +166,6 @@ gitree --export project --format md
 
 ```
 
----
-
 
 ---
 
@@ -172,21 +181,6 @@ gitree --export project --format md
 | **Zipping the Whole Project** | Create project archives that automatically respect `.gitignore` rules |
 | **Large/Binary Files Handling** | Automatically detects binary and large files and marks or skips them during export |
 
-
----
-
-## 🧪 Continuous Integration (CI)
-
-Gitree uses **Continuous Integration (CI)** to ensure code quality and prevent regressions on every change.
-
-### What CI Does
-
-- Runs **automated checks** on every pull request
-- Verifies that all **CLI arguments** work as expected
-- Ensures the tool **behaves consistently** across updates
-
-> [!NOTE]
-> CI tests are continuously expanding as new features are added.
 
 ---
 
