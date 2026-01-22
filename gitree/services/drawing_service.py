@@ -108,16 +108,41 @@ class DrawingService:
         else:
             ctx.output_buffer.write(f"{Color.cyan(root_label) if not config.no_color else root_label}")
 
-        def _rec(node: dict[str, Any], prefix: str) -> None:
+
+        def _rec(node: dict[str, Any], prefix: str, truncated_entries: bool) -> None:
             kids = _children_sorted(node.get("children", []))
+            remaining = int(node.get("remaining_items", 0) or 0)
+
+            # If we will print the truncation message, treat it as an extra final line
+            total_lines = len(kids) + (1 if remaining > 0 else 0)
+
             for i, child in enumerate(kids):
-                connector = LAST if i == len(kids) - 1 else BRANCH
+                connector = LAST if i == total_lines - 1 else BRANCH
                 _write_line(prefix, connector, child)
+
                 if _is_dir(child):
                     next_prefix = prefix + (SPACE if connector == LAST else VERT)
-                    _rec(child, next_prefix)
+                    _rec(child, next_prefix, truncated_entries)  # <-- pass it through
 
-        _rec(tree_data, "")
+            if remaining > 0:
+                msg = f"... and {remaining} more items"
+                connector = LAST
+
+                if config.no_color:
+                    ctx.output_buffer.write(f"{prefix}{connector}{msg}")
+                else:
+                    ctx.output_buffer.write(f"{prefix}{connector}{Color.grey(msg)}")
+
+            # Only print this ONCE: at the very end of the whole output (root call)
+            if prefix == "" and truncated_entries:
+                msg = "... and more entries"
+                if config.no_color:
+                    ctx.output_buffer.write(f"{msg}")
+                else:
+                    ctx.output_buffer.write(f"{Color.grey(msg)}")
+
+
+        _rec(tree_data, "", bool(tree_data.get("truncated_entries", False)))
 
 
     @staticmethod
