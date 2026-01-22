@@ -54,7 +54,7 @@ gt
 ```
 
 <img
-  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/default_demo.gif"
+  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/default.jpg"
   alt="gitree demo"
   width="600"
 />
@@ -68,29 +68,26 @@ gt --emoji
 gt -e
 ```
 
-You will see an output similar to this:
-
-```text
-📂 gitree
-├─ 📁 gitree
-├─ 📁 tests
-├─ 📄 CODE_OF_CONDUCT.md
-├─ 📄 CONTRIBUTING.md
-├─ 📄 LICENSE
-├─ 📄 pyproject.toml
-├─ 📄 README.md
-├─ 📄 requirements.txt
-└─ 📄 SECURITY.md
-```
+<img
+  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/emoji_hidden.jpg"
+  alt="gitree demo"
+  width="600"
+/>
 
 For printing the full structure of any directory or project:
 
 ```
-gt --full
+gt --full -e
 
-# OR -f as alias for --full
-gt -f
+# OR -f as alias for --full (and then -e can just be used together with it)
+gt -fe
 ```
+
+<img
+  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/emoji_full.jpg"
+  alt="gitree demo"
+  width="600"
+/>
 
 Some useful commands you can use with this tool (for LLM prompting):
 
