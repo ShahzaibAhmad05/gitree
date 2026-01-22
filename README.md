@@ -1,6 +1,6 @@
 # gitree 🌴
 
-**A git-aware CLI tool to provide LLM context for coding projects by combining project files into a single file with a number of different formats to choose from.**
+**A CLI tool that helps generate structured context for LLMs by combining project files into a single, exportable format.**
 
 <br>
 
@@ -17,29 +17,6 @@
 
 ---
 
-## ✨ Features
-
-| Feature                           | Description                                                                   |
-| --------------------------------- | ----------------------------------------------------------------------------- |
-| 📊 **Project Tree Visualization** | Generate clean directory trees with customizable depth and formatting         |
-| 🗜️ **Smart Zipping**              | Create project archives that automatically respect `.gitignore` rules         |
-| 🎯 **Flexible Filtering**         | Control what's shown with custom ignore patterns, depth limits, and item caps |
-| 🔍 **Gitignore Integration**      | Use `.gitignore` files at any depth level, or disable entirely when needed    |
-| 📋 **Multiple Export Formats**    | Export to files, copy to clipboard, or display with emoji icons               |
-| 📁 **Directory-Only View**        | Show just the folder structure without files for high-level overviews         |
-| 📈 **Project Summary**            | Display file and folder counts at each directory level with summary mode      |
-
----
-
-## 🔥 The problems it solves:
-
-- **sharing project structure** in issues or pull requests
-- **generating directory trees** for documentation
-- **pasting project layouts** into **LLMs**
-- **converting entire codebases** to a **single json file** using `.gitignore` for prompting LLMs.
-
----
-
 ## 📦 Installation
 
 Install using **pip** (python package manager):
@@ -48,9 +25,8 @@ Install using **pip** (python package manager):
 # Install the latest version using pip
 pip install gitree
 
-# Get the stable version instead (older, lacks features)
-pip install gitree==0.1.3
-
+# to update gitree
+pip install -U gitree
 ```
 
 ---
@@ -60,56 +36,26 @@ pip install gitree==0.1.3
 To use this tool, refer to this **format**:
 
 ```bash
-gitree [path] [other CLI args/flags]
-
+gitree [paths] [other CLI args/flags]
 ```
+
+**To literally get started, I would recommend doing this:**
 
 Open a terminal in any project and run:
 
 ```bash
-# path should default to .
+# paths should default to .
+# This will scan gitignores by default
 gitree
-
 ```
 
-Example output:
-
-```text
-Gitree
-├─ gitree/
-│  ├─ constants/
-│  │  ├─ __init__.py
-│  │  └─ constant.py
-│  ├─ services/
-│  │  ├─ __init__.py
-│  │  ├─ draw_tree.py
-│  │  ├─ list_enteries.py
-│  │  ├─ parser.py
-│  │  └─ zip_project.py
-│  ├─ utilities/
-│  │  ├─ __init__.py
-│  │  ├─ gitignore.py
-│  │  └─ utils.py
-│  ├─ __init__.py
-│  └─ main.py
-├─ CODE_OF_CONDUCT.md
-├─ CONTRIBUTING.md
-├─ LICENSE
-├─ pyproject.toml
-├─ README.md
-├─ requirements.txt
-└─ SECURITY.md
-
-```
-
-Using **emojis** as file/directory icons:
+Now try this for better visuals:
 
 ```bash
 gitree --emoji
-
 ```
 
-Example output:
+You _should_ see an output like this:
 
 ```text
 Gitree
@@ -136,93 +82,96 @@ Gitree
 ├─ 📄 README.md
 ├─ 📄 requirements.txt
 └─ 📄 SECURITY.md
-
 ```
 
-For **zipping** a directory:
+Some useful commands you can use everyday with this tool:
 
 ```bash
-gitree --zip out
-
+# Copy all C++ code in your project, 
+# with interactive selection for those files
+gitree **/*.cpp --copy -i
 ```
-
-creates **out.zip** in the same directory.
-
-For **combining interactive selection with export**:
 
 ```bash
-gitree --export project -i
-
+# Zip the whole project files (respecting gitignore)
+# creates project.zip in the same directory
+gitree --zip project
 ```
 
-This allows you to interactively select files and save the export to **project.txt**.
+```bash
+# Export the file contents of your project, in different formats to choose from
+gitree --export project --format tree
+gitree --export project --format json
+gitree --export project --format md
+```
 
 ---
 
-## 🧭 Interactive Mode
-
-Gitree supports an **interactive mode** that allows you to select files and directories step-by-step instead of relying only on CLI flags.
-
-> [!TIP] > **This is useful when:**
->
-> - you want **fine-grained control** over included files
-> - you prefer a **guided terminal-based selection flow**
-> - you want to **explore a project** before exporting its structure
-
-### Enable Interactive Mode
-
-Use the `-i` or `--interactive` flag:
-
-```bash
-gitree --interactive
-# or
-gitree -i
+## 🧩 How it Works
 
 ```
-
-### How It Works
-
-When interactive mode is enabled, **Gitree** will:
-
-1. **Scan** the project directory (respecting `.gitignore`)
-2. **Present** an interactive file and folder selection menu
-3. **Allow** you to choose what to include or exclude
-4. **Generate** output based on your selections
-
-### Interactive Controls
-
-During interactive selection, the following **keys** are supported:
-
-- **↑ / ↓** — navigate items
-- **Space** — select / deselect item
-- **Enter** — confirm selection
-- **Esc / Ctrl+C** — exit interactive mode
-
-### Example
-
-```bash
-gitree -i --emoji --out context.txt
+    ╭────────────────────────────╮
+    │           Start            │
+    ╰────────────────────────────╯
+                  │
+                  ▼
+    ╭────────────────────────────╮
+    │      Argument Parsing      │
+    ╰────────────────────────────╯
+                  │
+                  ▼
+    ╭────────────────────────────╮
+    │  Files/Folders Selection   │
+    ╰────────────────────────────╯
+                  │
+                  ▼
+    ╭────────────────────────────╮
+    │   Interactive Selection    │
+    │      (only if used)        │
+    ╰────────────────────────────╯
+            │
+            ├─────────────────────────┐
+            │                         │
+            ▼                         ▼
+    ╭─────────────────╮    ╭─────────────────────╮
+    │ Zipping Service │    │   Drawing Service   │
+    ╰─────────────────╯    ╰─────────────────────╯
+            │                  │
+            │                  ├────────────────────┐
+            │                  │                    │
+            │                  ▼                    ▼
+            │         ╭─────────────────╮  ╭──────────────────╮
+            │         │  Copy Service   │  │  Export Service  │
+            │         ╰─────────────────╯  ╰──────────────────╯
+            │                  │                    │
+            │                  └──────────┬─────────┘
+            │                             │
+            └─────────────────────────────┘
+                           │
+                           ▼
+               ╭────────────────────────╮
+               │    Output & Finish     │
+               ╰────────────────────────╯
 
 ```
-
-This will:
-
-- launch **interactive selection**
-- display output using **emojis**
-- save the result to `context.txt`
 
 ---
 
-### Updating Gitree:
 
-To update the tool, type:
+---
 
-```bash
-pip install -U gitree
+## ✨ Overall Features
 
-```
+| Feature                           | Description                                                                   |
+| --------------------------------- | ----------------------------------------------------------------------------- |
+| **Tree Visualization** | Generate a structure for any directory for visualizing and understanding the codebase |
+| **Smart File Selection** | Control what's selected by the tool with custom ignore patterns, depth limits, and item caps |
+| **Interactive Selection** | Gain full control of the output by reviewing what's selected by the file selection service |
+| **Copy Your Codebase** | Instantly copy the whole codebase file contents to your clipboard to paste into LLMs |
+| **Multiple Export Formats** | Export your codebase contents to files using tree, json and markdown formats |
+| **Zipping the Whole Project** | Create project archives that automatically respect `.gitignore` rules |
+| **Large/Binary Files Handling** | Automatically detects binary and large files and marks or skips them during export |
 
-Pip will automatically replace the older version with the **latest release**.
 
 ---
 
@@ -236,96 +185,66 @@ Gitree uses **Continuous Integration (CI)** to ensure code quality and prevent r
 - Verifies that all **CLI arguments** work as expected
 - Ensures the tool **behaves consistently** across updates
 
-### Current Test Coverage
-
-| Test Type          | Description                                       |
-| ------------------ | ------------------------------------------------- |
-| CLI Argument Tests | Validates all supported CLI flags and options     |
-| Workflow Checks    | Ensures PRs follow required checks before merging |
-
 > [!NOTE]
 > CI tests are continuously expanding as new features are added.
 
 ---
 
-### Implementation details
-
-The CI configuration is defined in `.github/workflows/`
-
-Each workflow file specifies:
-
-- Trigger conditions (i.e. pull request)
-- The Python version(s) used
-- The commands executed during the pipeline
-
-If any step fails, the pipeline will fail and the pull request cannot be merged until the issue is resolved.
-
 ## ⚙️ CLI Arguments
 
-In addition to the directory path, the following options are available:
+The following optional arguments are available for use:
 
-### Basic CLI flags
+### General Options
 
-| Argument              | Description                                              |
-| --------------------- | -------------------------------------------------------- |
-| `--version`, `-v`     | Displays the **installed version**.                      |
-| `--interactive`, `-i` | **Interactive selection UI**.                            |
-| `--init-config`       | Create a default `config.json` in the current directory. |
-| `--config-user`       | Open `config.json` in the **default editor**.            |
-| `--no-config`         | Ignore `config.json` and use **hardcoded defaults**.     |
+| Argument          | Description                                                                                                   |
+| ----------------- | ------------------------------------------------------------------------------------------------------------- |
+| `--version`, `-v` | Display the **version number** of the tool.                                                                       |
+| `--config-user`   | Create a **default config.json** file in the current directory and open that file in the **default editor**.        |
+| `--no-config`     | Ignore both **user-level and global-level** `config.json` and use **default and CLI values** for configuration.       |
+| `--verbose`       | Enable **logger output** to the console. Enabling this prints a log after the full workflow run. Helpful for **debugging**. |
 
-### Input/Output flags
+### Output & Export Options
 
-| Argument                | Description                                                             |
-| ----------------------- | ----------------------------------------------------------------------- |
-| `--max-depth`           | Limit recursion depth (e.g., `--max-depth 1`).                          |
-| `--hidden-items`        | Include hidden files and directories (does not override `.gitignore`).  |
-| `--exclude [pattern]`   | Exclude patterns (e.g., `--exclude *.pyc __pycache__`).                 |
-| `--exclude-depth [n]`   | Limit depth for exclude patterns (e.g., `--exclude-depth 2`).           |
-| `--gitignore-depth [n]` | Control discovery depth for `.gitignore` (e.g., `--gitignore-depth 0`). |
-| `--no-gitignore`        | Ignore all `.gitignore` rules.                                          |
-| `--max-items`           | Limit items per directory (default: 20).                                |
-| `--max-entries`           | Limit entries (default: 40).                                          |
-| `--no-max-entries`        | Disable total entries limit.                                          |
-| `--no-files`            | Show only directories (hide files).                                     |
-| `--emoji`, `-e`         | Use emojis in output.                                                   |
-| `--summary`             | Print file/folder counts per level.                                     |
-| `--include [pattern]`   | Include patterns (often used with interactive mode).                    |
-| `--include-file-type`   | Include a specific file type (e.g., `.py`, `json`).                     |
-| `--include-file-types`  | Include multiple file types (e.g., `png jpg json`).                     |
+| Argument          | Description                                                                                  |
+| ----------------- | -------------------------------------------------------------------------------------------- |
+| `--zip`, `-z`     | Create a **zip archive** of the given directory respecting **gitignore rules**.                      |
+| `--export`        | Save **project structure** along with its **contents** to a file with the format specified using `--format`. |
+| `--format`        | **Format output** only. Options: `tree`, `json`, `md`.                                           |
 
-### Listing flags
+### Listing Options
 
-| Argument                | Description                                                                |
-| ----------------------- | -------------------------------------------------------------------------- |
-| `--max-depth`           | Limit **recursion depth** (e.g., `--max-depth 1`).                         |
-| `--hidden-items`        | Include **hidden files and directories** (does not override `.gitignore`). |
-| `--exclude [pattern]`   | **Exclude patterns** (e.g., `--exclude *.pyc __pycache__`).                |
-| `--exclude-depth [n]`   | Limit depth for **exclude patterns** (e.g., `--exclude-depth 2`).          |
-| `--gitignore-depth [n]` | Control discovery depth for **.gitignore** (e.g., `--gitignore-depth 0`).  |
-| `--no-gitignore`        | Ignore all **.gitignore** rules.                                           |
-| `--max-items`           | Limit **items per directory** (default: 20).                               |
-| `--no-max-items`            | Remove per-directory **item limit**.                                       |
-| ` --no-files`           | Show only **directories** (hide files).                                    |
+| Argument                     | Description                                                                          |
+| ---------------------------- | ------------------------------------------------------------------------------------ |
+| `--max-items`                | Limit **items to be selected** per directory.                                           |
+| `--max-entries`              | Limit **entries (files/dirs)** to be selected for the overall output.                   |
+| `--max-depth`                | **Maximum depth** to traverse when selecting files.                                     |
+| `--gitignore-depth`          | Limit depth to look for during **`.gitignore` processing**.                             |
+| `--hidden-items`             | Show **hidden files and directories**.                                                  |
+| `--exclude [pattern ...]`    | **Patterns of files** to specifically exclude.                                          |
+| `--exclude-depth`            | Limit depth for **exclude patterns**.                                                   |
+| `--include [pattern ...]`    | **Patterns of files** to specifically include.                                          |
+| `--include-file-types`       | Include files of **certain types**.                                                     |
+| `--copy`, `-c`               | **Copy file contents** and project structure to **clipboard**. Similar to `--export` but copies to the clipboard instead. |
+| `--emoji`, `-e`              | Show **emojis** in the output.                                                          |
+| `--interactive`, `-i`        | Use **interactive mode** for further file selection.                                    |
+| `--files-first`              | Print **files before directories**.                                                     |
+| `--no-color`                 | Disable **colored output**.                                                             |
+| `--no-contents`              | Don't include **file contents** in export/copy.                                         |
+| `--no-contents-for [path ...]` | Exclude **contents for specific files** for export/copy.                              |
+| `--max-file-size`            | **Maximum file size** in MB to include in exports (default: 1.0).                       |
+| `--override-files`           | **Override existing files**.                                                            |
+
+### Listing Override Options
+
+| Argument           | Description                                |
+| ------------------ | ------------------------------------------ |
+| `--no-max-entries` | Disable **`--max-entries` limit**.             |
+| `--no-max-items`   | Disable **`--max-items` limit**.               |
+| `--no-gitignore`   | Do not use **`.gitignore` rules**.             |
+| `--no-files`       | Hide files (show only **directories**).        |
 
 ---
 
-## 📝 File Contents in Exports
-
-When using `--json`, `--tree`, or `--md` flags, **file contents are included by default**. This feature:
-
-- ✅ Includes **text file contents** (up to 1MB per file)
-- ✅ Detects and marks **binary files** as `[binary file]`
-- ✅ Handles **large files** by marking them as `[file too large: X.XXmb]`
-- ✅ Uses **syntax highlighting** in Markdown format based on file extension
-- ✅ Works with all **filtering options** (`--exclude`, `--include`, `.gitignore`, etc.)
-
-To export only the tree structure without file contents, use the `--no-contents` flag:
-
-```bash
-gitree --json output.json --no-contents
-
-```
 
 ---
 
@@ -334,22 +253,19 @@ gitree --json output.json --no-contents
 Clone the **repository**:
 
 ```bash
-git clone [https://github.com/ShahzaibAhmad05/Gitree](https://github.com/ShahzaibAhmad05/Gitree)
-
+git clone https://github.com/ShahzaibAhmad05/gitree
 ```
 
 Move into the **project directory**:
 
 ```bash
-cd Gitree
-
+cd gitree
 ```
 
 Setup a **Virtual Environment** (to avoid package conflicts):
 
 ```bash
 python -m venv .venv
-
 ```
 
 Activate the **virtual environment**:
@@ -357,7 +273,6 @@ Activate the **virtual environment**:
 ```bash
 .venv/Scripts/Activate      # on windows
 .venv/bin/activate          # on linux/macOS
-
 ```
 
 > [!WARNING]
@@ -391,6 +306,6 @@ python -m tests
 ## Contributions
 
 > [!TIP]
-> This is **YOUR** tool. Issues and pull requests are welcome.
+> This is **YOUR** tool. Issues and pull requests are always welcome.
 
-Gitree is kept intentionally small and readable, so contributions that preserve **simplicity** are especially appreciated.
+Gitree is kept intentionally small and readable, so contributions that preserve **simplicity** and follow [Contributing Guidelines](https://github.com/ShahzaibAhmad05/gitree?tab=contributing-ov-file) are especially appreciated.

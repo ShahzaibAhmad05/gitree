@@ -102,7 +102,7 @@ class Config:
             "format": "tree",
             "max_items": 20,
             "max_entries": 40,
-            "max_depth": 5,
+            "max_depth": 1,
             "gitignore_depth": 5,
             "hidden_items": False,
             "exclude": [],
