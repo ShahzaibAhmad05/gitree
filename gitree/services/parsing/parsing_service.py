@@ -53,7 +53,7 @@ class ParsingService:
         ParsingService._add_io_flags(ctx, ap)
         ParsingService._add_listing_flags(ctx, ap)
         ParsingService._add_listing_control_flags(ctx, ap)
-        ParsingService._add_shortcut_flags(ctx, ap)
+        ParsingService._add_semantic_flags(ctx, ap)
 
         args = ap.parse_args()
         ctx.logger.log(ctx.logger.DEBUG, f"Parsed arguments: {args}")
@@ -287,9 +287,9 @@ class ParsingService:
 
 
     @staticmethod
-    def _add_shortcut_flags(ctx: AppContext, ap: argparse.ArgumentParser):
+    def _add_semantic_flags(ctx: AppContext, ap: argparse.ArgumentParser):
         """
-        Add shortcut flags that map to other flags for ease of use.
+        Add semantic flags that provide quick, intuitive shortcuts for common operations.
         """
 
         ap.add_argument("-f", "--full", action="store_true",

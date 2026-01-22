@@ -1,6 +1,6 @@
 # gitree 🌴
 
-**A replacement of "ls" for developers. A python tool to analyze folder structures and to provide code context to LLMs. Published on PyPi**
+**A replacement of "ls" for developers. An open-source python tool to analyze folder structures and to provide code context to LLMs. Published on PyPi**
 
 
 > [!NOTE]
@@ -181,26 +181,37 @@ gitree --export project --format md
 
 ---
 
-## ⚙️ CLI Arguments
-
-The following optional arguments are available for use:
+## ⚙️ Common Arguments
 
 ### General Options
 
 | Argument          | Description                                                                                                   |
 | ----------------- | ------------------------------------------------------------------------------------------------------------- |
-| `--version`, `-v` | Display the **version number** of the tool.                                                                       |
-| `--config-user`   | Create a **default config.json** file in the current directory and open that file in the **default editor**.        |
-| `--no-config`     | Ignore both **user-level and global-level** `config.json` and use **default and CLI values** for configuration.       |
-| `--verbose`, `--log` | Enable **logger output** to the console. Enabling this prints a log after the full workflow run. Helpful for **debugging**. |
+| `-h`, `--help`    | Show the **help message** with all available options and exit.                                                  |
+| `-v`, `--version` | Display the **version number** of the tool.                                                                       |
+| `--verbose`       | Enable **logger output** to the console. Helpful for **debugging**.                                             |
+| `--config-user`   | Create a **default config.json** file in the current directory and open it in the **default editor**.           |
+| `--no-config`     | Ignore both **user-level and global-level** `config.json` and use **default and CLI values** for configuration. |
+
+### Semantic Flags (Quick Actions)
+
+| Argument          | Description                                                                                  |
+| ----------------- | -------------------------------------------------------------------------------------------- |
+| `-f`, `--full`    | **Shortcut** for `--max-depth 5` - show full directory tree up to 5 levels deep.              |
+| `-e`, `--emoji`   | Show **emojis** in the output for better visual clarity.                                      |
+| `-i`, `--interactive` | Use **interactive mode** for manual file selection after automatic filtering.            |
+| `-c`, `--copy`    | **Copy** file contents and project structure to **clipboard** (great for LLM prompts).        |
 
 ### Output & Export Options
 
 | Argument          | Description                                                                                  |
 | ----------------- | -------------------------------------------------------------------------------------------- |
-| `--zip`, `-z`     | Create a **zip archive** of the given directory respecting **gitignore rules**.                      |
+| `-z`, `--zip`     | Create a **zip archive** of the given directory respecting **gitignore rules**.              |
 | `--export`        | Save **project structure** along with its **contents** to a file with the format specified using `--format`. |
-| `--format`        | **Format output** only. Options: `tree`, `json`, `md`.                                           |
+| `--format`        | **Format output** only. Options: `tree`, `json`, `md`. Default: `tree`.                      |
+
+<details>
+<summary><h3>📋 Full CLI Arguments (Click to expand)</h3></summary>
 
 ### Listing Options
 
@@ -215,9 +226,6 @@ The following optional arguments are available for use:
 | `--exclude-depth`            | Limit depth for **exclude patterns**.                                                   |
 | `--include [pattern ...]`    | **Patterns of files** to specifically include.                                          |
 | `--include-file-types`       | Include files of **certain types**.                                                     |
-| `--copy`, `-c`               | **Copy file contents** and project structure to **clipboard**. Similar to `--export` but copies to the clipboard instead. |
-| `--emoji`, `-e`              | Show **emojis** in the output.                                                          |
-| `--interactive`, `-i`        | Use **interactive mode** for further file selection.                                    |
 | `--files-first`              | Print **files before directories**.                                                     |
 | `--no-color`                 | Disable **colored output**.                                                             |
 | `--no-contents`              | Don't include **file contents** in export/copy.                                         |
@@ -234,10 +242,10 @@ The following optional arguments are available for use:
 | `--no-gitignore`   | Do not use **`.gitignore` rules**.             |
 | `--no-files`       | Hide files (show only **directories**).        |
 
+</details>
+
 ---
 
-
----
 
 ## Installation (for Contributors)
 
