@@ -26,9 +26,10 @@ from .services.interactive_selection_service import InteractiveSelectionService
 
 
 def flush_buffers(ctx: AppContext, config: Config):
-    """ 
-    Handle flushing the buffers. 
     """
+    Handle flushing the buffers.
+    """
+    print()
 
     # print the export only if not in no_printing and buffer not empty
     if not config.no_printing and not ctx.output_buffer.empty():
@@ -36,10 +37,12 @@ def flush_buffers(ctx: AppContext, config: Config):
 
     # print the log if verbose mode
     if config.verbose:
-        if not config.no_printing and not ctx.output_buffer.empty(): 
+        if not config.no_printing and not ctx.output_buffer.empty():
             print()
         print("LOG:")
         ctx.logger.flush()
+
+    print()
 
 
 def main() -> None:
