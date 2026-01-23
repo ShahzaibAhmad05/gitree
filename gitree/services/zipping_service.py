@@ -47,7 +47,11 @@ class ZippingService:
             for fp in files:
                 try:
                     arcname = ZippingService._arcname(root, fp)
-                    zf.write(fp, arcname=arcname)
+                    # If --no-contents is enabled, create empty files in the zip
+                    if getattr(config, "no_contents", False):
+                        zf.writestr(arcname, "")
+                    else:
+                        zf.write(fp, arcname=arcname)
                 except Exception:
                     continue
         

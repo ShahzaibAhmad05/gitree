@@ -49,6 +49,11 @@ class ExportService:
         out: list[str] = []
 
         out.extend(structure)
+        
+        # Skip file contents if --no-contents is enabled
+        if getattr(config, "no_contents", False):
+            return out
+        
         out.append("")
         out.append("==== FILE CONTENTS ====")
 
@@ -68,6 +73,11 @@ class ExportService:
 
         out.append("## Project Structure")
         out.extend(structure)       # Assuming structure is already in md format
+        
+        # Skip file contents if --no-contents is enabled
+        if getattr(config, "no_contents", False):
+            return out
+        
         out.append("## Files")
         out.append("")
 
@@ -88,13 +98,17 @@ class ExportService:
 
         structure = ctx.output_buffer.get_value()
 
-        files = [
-            {
-                "path": str(fp),
-                "content": ExportService._read_text(fp, config.max_file_size),
-            }
-            for fp in ExportService._iter_files(tree_data)
-        ]
+        # Skip file contents if --no-contents is enabled
+        if getattr(config, "no_contents", False):
+            files = []
+        else:
+            files = [
+                {
+                    "path": str(fp),
+                    "content": ExportService._read_text(fp, config.max_file_size),
+                }
+                for fp in ExportService._iter_files(tree_data)
+            ]
 
         payload = {
             "structure": structure,
