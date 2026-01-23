@@ -5,6 +5,8 @@ Utility functions for the tool.
 """
 
 # Default libs
+import sys
+from typing import NoReturn
 import argparse
 
 
@@ -46,3 +48,18 @@ def max_entries_int(v: str) -> int:
         raise argparse.ArgumentTypeError(
             "--max-entries must be >= 1 and <=10000")
     return n
+
+
+def error_and_exit(message: str, code: int = 1) -> NoReturn:
+    """
+    Print an error message and exit the program with the given error code.
+
+    Args:
+        message (str): Error message to display
+        code (int): Exit code (default: 1)
+
+    Returns:
+        NoReturn
+    """
+    print(f"Error: {message}", file=sys.stderr)
+    sys.exit(code)
