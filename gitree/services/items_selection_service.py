@@ -45,7 +45,7 @@ class ItemsSelectionService:
             ctx, config, config.paths + config.include)
         ctx.logger.log(Logger.DEBUG, 
             f"Selected includes at: {round((time.time()-start_time)*1000, 2)} ms")
-        
+
         resolved_exclude_paths = ItemsSelectionService._resolve_given_paths(
             ctx, config, config.exclude)
         ctx.logger.log(Logger.DEBUG, 
@@ -54,9 +54,9 @@ class ItemsSelectionService:
 
         # Safety check to avoid crashes on no paths found
         if not resolved_include_paths:
-            ctx.logger.log(Logger.ERROR, "No included paths were found matching given args")
-            return {}
-
+            print("Error: no included paths were found matching given args")
+            exit(1)
+        
 
         # Start from the parent dir and keep adding items recursively
         # includes resolving hidden_files, gitignore, include and exclude
@@ -66,6 +66,7 @@ class ItemsSelectionService:
             curr_dir=resolved_include_paths[-1], 
             exclude_paths=resolved_exclude_paths[:-1])
         
+
         ctx.logger.log(Logger.DEBUG, 
             f"Exited ItemsSelectionService at: {round((time.time()-start_time)*1000, 2)} ms")
 
@@ -228,7 +229,8 @@ class ItemsSelectionService:
 
 
                 # Check if it is a hidden file/dir or hidden-items flag is not used
-                if not config.hidden_items and ItemsSelectionService._ishidden(item_path):
+                if (not config.hidden_items and ItemsSelectionService._ishidden(item_path) and 
+                    not item_path in resolved_include_paths):
                     continue
 
                 

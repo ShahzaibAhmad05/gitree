@@ -135,7 +135,7 @@ class DrawingService:
 
             # Only print this ONCE: at the very end of the whole output (root call)
             if prefix == "" and truncated_entries:
-                msg = "... and more entries"
+                msg = "... some entries were truncated, use '-n' to show all entries"
                 if config.no_color:
                     ctx.output_buffer.write(f"{msg}")
                 else:
