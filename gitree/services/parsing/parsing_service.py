@@ -309,7 +309,7 @@ class ParsingService:
         listing_control.add_argument("--no-gitignore", action="store_true", 
             default=argparse.SUPPRESS, help="Do not use .gitignore rules")
         
-        listing_control.add_argument("--no-files", action="store_true", 
+        listing_control.add_argument("--no-files", "--only-dirs", action="store_true", 
             default=argparse.SUPPRESS, help="Hide files (show only directories)")
 
 
