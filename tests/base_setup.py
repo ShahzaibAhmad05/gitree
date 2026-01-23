@@ -48,13 +48,20 @@ class BaseCLISetup(unittest.TestCase):
         Args:
             args (tuple): extra CLI arguments, e.g. "--max-depth 1", "--help", "--zip output.zip"
         """
+        # Handle both single string and multiple args
+        if len(args) == 1 and isinstance(args[0], str):
+            # Split the string into individual arguments
+            cmd_args = args[0].split() if args[0] else []
+        else:
+            cmd_args = list(args)
 
         return subprocess.run(
-            [sys.executable, "-m", "gitree.main", *args],
+            [sys.executable, "-m", "gitree.main"] + cmd_args,
             cwd=self.root,
             capture_output=True,
             text=True,
             encoding="utf-8",
+            timeout=10,  # Add timeout to prevent hanging on interactive mode
         )
 
 
