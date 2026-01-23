@@ -32,7 +32,7 @@ class FlushService:
             config (Config): The application configuration
         """
 
-        if not config.no_printing: print()
+        if not config.no_printing and not ctx.output_buffer.empty(): print()
 
         # print the export only if not in no_printing and buffer not empty
         if not config.no_printing and not ctx.output_buffer.empty():
@@ -45,5 +45,4 @@ class FlushService:
             print("LOG:")
             ctx.logger.flush()
 
-        if not config.no_printing: print()
-        
+        if not config.no_printing and not ctx.output_buffer.empty(): print()
