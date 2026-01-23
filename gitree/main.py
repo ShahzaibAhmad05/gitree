@@ -17,32 +17,13 @@ from .services.drawing_service import DrawingService
 from .services.zipping_service import ZippingService
 from .services.export_service import ExportService
 from .services.copy_service import CopyService
+from .services.flush_service import FlushService
 
 # from .services.zipping_service import ZippingService
 from .objects.app_context import AppContext
 from .objects.config import Config
 from .utilities.logging_utility import Logger
 from .services.interactive_selection_service import InteractiveSelectionService
-
-
-def flush_buffers(ctx: AppContext, config: Config):
-    """
-    Handle flushing the buffers.
-    """
-    if not config.no_printing and not ctx.output_buffer.empty(): print()
-
-    # print the export only if not in no_printing and buffer not empty
-    if not config.no_printing and not ctx.output_buffer.empty():
-        ctx.output_buffer.flush()
-
-    # print the log if verbose mode
-    if config.verbose:
-        if not config.no_printing and not ctx.output_buffer.empty():
-            print()
-        print("LOG:")
-        ctx.logger.flush()
-
-    if not config.no_printing and not ctx.output_buffer.empty(): print()
 
 
 def main() -> None:
@@ -105,7 +86,7 @@ def main() -> None:
 
 
     # Flush the buffers to the console before exiting
-    flush_buffers(ctx, config)
+    FlushService.run(ctx, config)
 
 
 if __name__ == "__main__":
