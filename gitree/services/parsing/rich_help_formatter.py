@@ -238,7 +238,7 @@ class RichHelpFormatter(argparse.HelpFormatter):
         table.add_column("Description", style="white")
         
         table.add_row(
-            "--format [tree|json|md]",
+            "-f,--format [tree|json|md]",
             "Format output (default: tree)"
         )
         table.add_row(

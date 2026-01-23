@@ -229,7 +229,7 @@ class ParsingService:
     def _add_listing_flags(ctx: AppContext, ap: argparse.ArgumentParser):
         listing = ap.add_argument_group("listing options")
 
-        listing.add_argument("--format", choices=["tree", "json", "md"], 
+        listing.add_argument("-f","--format", choices=["tree", "json", "md"], 
             default="tree", help="Format output only")
 
         listing.add_argument("--max-items", type=max_items_int, 
