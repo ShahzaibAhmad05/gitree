@@ -2,10 +2,6 @@
 
 **A replacement of "ls" for developers. An open-source python tool to analyze folder structures and to provide code context to LLMs. Published on PyPi**
 
-
-> [!NOTE]
-> You may use "gt" to call this tool, instead of the full-name "gitree"
-
 <br>
 
 <div align="center">
@@ -18,6 +14,10 @@
 [![PRs closed](https://img.shields.io/github/issues-pr-closed/shahzaibahmad05/gitree?color=yellow)](https://github.com/shahzaibahmad05/gitree/pulls)
 
 </div>
+
+
+> [!NOTE]
+> Instead of the full-name "gitree", you may use "gt" to call this tool
 
 ---
 
@@ -89,29 +89,64 @@ gt -fe
   width="600"
 />
 
-Some useful commands you can use with this tool (for LLM prompting):
+For copying all C++ code in your project, with interactive selection:
 
 ```bash
-# Copy all C++ code in your project, 
-# with interactive selection for those files
-gt **/*.cpp --copy -i
+gt --copy --interactive --only-types cpp
 
-# For React-based frontend projects
-gt --exclude **/*.json
+# OR alternaitvely, using alias
+# -i for interactive and -c for copy
+gt -ci --only-types cpp
 ```
 
+<img
+  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/interactive.jpg"
+  alt="gitree demo"
+  width="600"
+/>
+
+<img
+  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/copy_cpp_interactive.jpg"
+  alt="gitree demo"
+  width="600"
+/>
+
+For zipping the whole project, respecting gitignore:
+
 ```bash
-# Zip the whole project files (respecting gitignore)
 # creates project.zip in the same directory
-gitree --zip project
+gt --zip project
+
+# OR alternatively, using alias
+gt -z project
 ```
 
+<img
+  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/zipping.jpg"
+  alt="gitree demo"
+  width="600"
+/>
+
+For copying the whole project into a single file:
+
 ```bash
-# Export the file contents of your project, in different formats
-gitree --export project --format tree
-gitree --export project --format json
-gitree --export project --format md
+# Creates project.txt in the directory from where gt is run
+# Default format for export is tree
+gt --export project --format tree
+
+# OR alternatively use alias
+gt -x project -f tree
+
+# OR use other formats
+gt -x project -f json
+gt -x project -f md
 ```
+
+<img
+  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/export.jpg"
+  alt="gitree demo"
+  width="600"
+/>
 
 ---
 
@@ -212,7 +247,7 @@ gitree --export project --format md
 | `--format`        | **Format output** only. Options: `tree`, `json`, `md`. Default: `tree`.                      |
 
 <details>
-<summary><h3>📋 Full CLI Arguments (Click to expand)</h3></summary>
+<summary><h3>Full CLI Arguments List (Click to expand)</h3></summary>
 
 ### Listing Options
 
@@ -283,7 +318,6 @@ Install **dependencies** in the virtual environment:
 
 ```bash
 pip install -r requirements.txt
-
 ```
 
 The tool is now available as a **Python CLI** in your virtual environment.
@@ -291,8 +325,7 @@ The tool is now available as a **Python CLI** in your virtual environment.
 For running the tool, type (**venv should be activated**):
 
 ```bash
-gitree
-
+gt
 ```
 
 For running **unit tests** after making changes:
