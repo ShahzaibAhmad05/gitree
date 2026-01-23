@@ -45,9 +45,6 @@ class RichHelpFormatter(argparse.HelpFormatter):
         self._print_listing_options()
         self._print_listing_override_options()
         
-        # Footer
-        self._print_footer()
-        
         # Exit after displaying help
         sys.exit(0)
 
@@ -324,32 +321,3 @@ class RichHelpFormatter(argparse.HelpFormatter):
             padding=(0, 1)
         )
         self.console.print(panel)
-
-    def _print_footer(self):
-        """Print footer with examples and additional information."""
-        examples = Text()
-        examples.append("\n  gitree", style="cyan")
-        examples.append("                     # Show current directory tree\n")
-        examples.append("  gitree ", style="cyan")
-        examples.append("/path/to/project", style="yellow")
-        examples.append("    # Show specific directory tree\n")
-        examples.append("  gitree ", style="cyan")
-        examples.append("-f --emoji", style="green")
-        examples.append("          # Full tree with emojis\n")
-        examples.append("  gitree ", style="cyan")
-        examples.append("--export output.txt", style="green")
-        examples.append(" # Export to file\n")
-        examples.append("  gitree ", style="cyan")
-        examples.append("-c --format json", style="green")
-        examples.append("    # Copy JSON to clipboard\n")
-        
-        panel = Panel(
-            examples,
-            title="[bold white]Examples[/bold white]",
-            title_align="left",
-            box=box.ROUNDED,
-            border_style="bright_cyan",
-            padding=(0, 2)
-        )
-        self.console.print(panel)
-        self.console.print()
