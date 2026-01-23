@@ -109,13 +109,15 @@ class ParsingService:
         Correct and validate CLI arguments in place.
         """
         
+        # Correcting export path
         if getattr(args, "export", None) is not None:
             args.export = ParsingService._fix_output_path(
                 ctx, args.export,
                 default_extensions={"tree": ".txt", "json": ".json", "md": ".md"},
-                format_str=args.format
-            )
+                format_str=args.format)
+            
 
+        # Correcting zip path
         if getattr(args, "zip", None):
             args.zip = ParsingService._fix_output_path(ctx, args.zip, default_extension=".zip")
 
@@ -128,6 +130,7 @@ class ParsingService:
         if getattr(args, "only_types", None):
             args.paths = []
             exts = []
+            
             for e in args.only_types:
                 e = e.lower().lstrip(".")
                 if e:

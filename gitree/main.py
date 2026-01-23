@@ -29,7 +29,7 @@ def flush_buffers(ctx: AppContext, config: Config):
     """
     Handle flushing the buffers.
     """
-    if not config.no_printing: print()
+    if not config.no_printing and not ctx.output_buffer.empty(): print()
 
     # print the export only if not in no_printing and buffer not empty
     if not config.no_printing and not ctx.output_buffer.empty():
@@ -42,7 +42,7 @@ def flush_buffers(ctx: AppContext, config: Config):
         print("LOG:")
         ctx.logger.flush()
 
-    if not config.no_printing: print()
+    if not config.no_printing and not ctx.output_buffer.empty(): print()
 
 
 def main() -> None:
