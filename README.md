@@ -201,6 +201,7 @@ gitree --export project --format md
 | `-e`, `--emoji`   | Show **emojis** in the output for better visual clarity.                                      |
 | `-i`, `--interactive` | Use **interactive mode** for manual file selection after automatic filtering.            |
 | `-c`, `--copy`    | **Copy** file contents and project structure to **clipboard** (great for LLM prompts).        |
+| `--only-types`    | Include **only specific code extensions** (e.g., `--only-types py cpp tsx`).                  |
 
 ### Output & Export Options
 

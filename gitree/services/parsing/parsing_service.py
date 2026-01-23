@@ -266,18 +266,6 @@ class ParsingService:
             default=argparse.SUPPRESS, dest="include_file_types", 
             help="Include files of certain types")
         
-        listing.add_argument("-c", "--copy", action="store_true", 
-            default=argparse.SUPPRESS, 
-            help="Copy file contents and project structure to clipboard."
-                " Similar to --export but copies to the clipboard instead")
-        
-        listing.add_argument("-e", "--emoji", action="store_true", 
-            default=argparse.SUPPRESS, help="Show emojis in the output")
-        
-        listing.add_argument("-i", "--interactive", action="store_true", 
-            default=argparse.SUPPRESS, 
-            help="Use interactive mode for further file selection")
-        
         listing.add_argument("--files-first", action="store_true", 
             default=argparse.SUPPRESS, help="Print files before directories")
         
@@ -321,14 +309,28 @@ class ParsingService:
         """
         Add semantic flags that provide quick, intuitive shortcuts for common operations.
         """
+        semantic = ap.add_argument_group("SEMANTIC FLAGS (QUICK ACTIONS)")
 
-        ap.add_argument("-f", "--full", action="store_true",
+        semantic.add_argument("-f", "--full", action="store_true",
             default=argparse.SUPPRESS,
-            help="Shortcut for --max-depth 5 in the output")
-        ap.add_argument(
+            help="Shortcut for --max-depth 5 - show full directory tree up to 5 levels deep")
+        
+        semantic.add_argument("-e", "--emoji", action="store_true", 
+            default=argparse.SUPPRESS, 
+            help="Show emojis in the output for better visual clarity")
+        
+        semantic.add_argument("-i", "--interactive", action="store_true", 
+            default=argparse.SUPPRESS, 
+            help="Use interactive mode for manual file selection after automatic filtering")
+        
+        semantic.add_argument("-c", "--copy", action="store_true", 
+            default=argparse.SUPPRESS, 
+            help="Copy file contents and project structure to clipboard (great for LLM prompts)")
+        
+        semantic.add_argument(
             "--only-types",
             nargs="+",
             metavar="EXT",
             default=argparse.SUPPRESS,
-            help="Include only these code extensions (e.g. --only-types py cpp tsx)"
+            help="Include only specific code extensions (e.g., --only-types py cpp tsx)"
         )

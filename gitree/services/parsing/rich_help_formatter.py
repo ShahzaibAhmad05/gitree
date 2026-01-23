@@ -39,11 +39,9 @@ class RichHelpFormatter(argparse.HelpFormatter):
         # Positional arguments
         self._print_positional_args()
         
-        # Options sections
+        # Options sections - Only show General and Semantic options
         self._print_general_options()
-        self._print_output_options()
-        self._print_listing_options()
-        self._print_listing_override_options()
+        self._print_semantic_flags()
         
         # Exit after displaying help
         sys.exit(0)
@@ -148,6 +146,48 @@ class RichHelpFormatter(argparse.HelpFormatter):
             title_align="left",
             box=box.ROUNDED,
             border_style="green",
+            padding=(0, 1)
+        )
+        self.console.print(panel)
+
+    def _print_semantic_flags(self):
+        """Print semantic flags (quick actions) section."""
+        table = Table(
+            show_header=False,
+            box=box.SIMPLE,
+            padding=(0, 1),
+            collapse_padding=True
+        )
+        table.add_column("Flag", style="bold cyan", width=25)
+        table.add_column("Description", style="white")
+        
+        table.add_row(
+            "-f, --full",
+            "Shortcut for --max-depth 5 - show full directory tree\nup to 5 levels deep"
+        )
+        table.add_row(
+            "-e, --emoji",
+            "Show emojis in the output for better visual clarity"
+        )
+        table.add_row(
+            "-i, --interactive",
+            "Use interactive mode for manual file selection\nafter automatic filtering"
+        )
+        table.add_row(
+            "-c, --copy",
+            "Copy file contents and project structure to clipboard\n(great for LLM prompts)"
+        )
+        table.add_row(
+            "--only-types [EXT...]",
+            "Include only specific file types\n(e.g., --only-types py cpp tsx)"
+        )
+        
+        panel = Panel(
+            table,
+            title="[bold white]Semantic Flags (Quick Actions)[/bold white]",
+            title_align="left",
+            box=box.ROUNDED,
+            border_style="cyan",
             padding=(0, 1)
         )
         self.console.print(panel)
