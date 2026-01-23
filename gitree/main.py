@@ -21,7 +21,6 @@ from .services.flush_service import FlushService
 
 # from .services.zipping_service import ZippingService
 from .objects.app_context import AppContext
-from .objects.config import Config
 from .utilities.logging_utility import Logger
 from .services.interactive_selection_service import InteractiveSelectionService
 
@@ -42,17 +41,17 @@ def main() -> None:
 
 
     # Prepare the config object (this has all the args now)
-    config = ParsingService.parse_args(ctx)
+    config = ParsingService.run(ctx)
 
 
     # if general options used, they are executed here
     # Handles for --version, --config-user, --no-config
-    GeneralOptionsService.handle_args(ctx, config)
+    GeneralOptionsService.run(ctx, config)
 
 
     # This service returns all the items to include resolved in a dict
     # Hover over ItemsSelectionService to check the format which it returns
-    resolved_root = ItemsSelectionService.resolve_items(ctx, config, start_time)
+    resolved_root = ItemsSelectionService.run(ctx, config, start_time)
 
 
     # Select files interactively if requested

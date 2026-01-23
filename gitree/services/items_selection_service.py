@@ -22,7 +22,7 @@ class ItemsSelectionService:
     Static class for resolving the args and forming an items dict.
     """
 
-    def resolve_items(ctx: AppContext, config: Config, start_time: float) -> dict[str, Any]:
+    def run(ctx: AppContext, config: Config, start_time: float) -> dict[str, Any]:
         """
         Resolves the items to include in the output using the config object. This 
         function is heavy on performance, so a start_time is needed to log performance.

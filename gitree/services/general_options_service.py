@@ -16,7 +16,7 @@ class GeneralOptionsService:
     """
     
     @staticmethod
-    def handle_args(ctx: AppContext, config: Config) -> None:
+    def run(ctx: AppContext, config: Config) -> None:
         """
         Public function to handle general options and point 
         no_printing attr to True if one was handled.

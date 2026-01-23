@@ -31,12 +31,12 @@ class ParsingService:
     """
     CLI parsing service for gitree tool. 
 
-    Wraps argument parsing and validation into a class. Call parse_args
+    Wraps argument parsing and validation into a class. Call run
     to get a Config object.
     """
 
     @staticmethod
-    def parse_args(ctx: AppContext) -> Config:
+    def run(ctx: AppContext) -> Config:
         """
         Public function to parse command-line arguments for the gitree tool.
 
@@ -130,7 +130,7 @@ class ParsingService:
         if getattr(args, "only_types", None):
             args.paths = []
             exts = []
-            
+
             for e in args.only_types:
                 e = e.lower().lstrip(".")
                 if e:
