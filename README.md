@@ -221,7 +221,7 @@ gitree --export project --format md
 | `--max-entries`              | Limit **entries (files/dirs)** to be selected for the overall output.                   |
 | `--max-depth`                | **Maximum depth** to traverse when selecting files.                                     |
 | `--gitignore-depth`          | Limit depth to look for during **`.gitignore` processing**.                             |
-| `--hidden-items`,`--all`     | Show **hidden files and directories**.                                                  |
+| `-a`, `--hidden-items`, `--all`     | Show **hidden files and directories**.                                                  |
 | `--exclude [pattern ...]`    | **Patterns of files** to specifically exclude.                                          |
 | `--exclude-depth`            | Limit depth for **exclude patterns**.                                                   |
 | `--include [pattern ...]`    | **Patterns of files** to specifically include.                                          |

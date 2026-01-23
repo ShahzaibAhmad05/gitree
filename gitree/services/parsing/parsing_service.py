@@ -245,7 +245,7 @@ class ParsingService:
             default=argparse.SUPPRESS, 
             help="Limit depth to look for during .gitignore processing")
         
-        listing.add_argument("--hidden-items", "--all",
+        listing.add_argument("-a", "--hidden-items", "--all",
             action="store_true",
             default=argparse.SUPPRESS,
             help="Show hidden files and directories")
