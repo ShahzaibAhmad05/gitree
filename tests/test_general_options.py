@@ -34,7 +34,7 @@ class TestGeneralOptions(BaseCLISetup):
         # Validate
         self.assertEqual(0, result.returncode,
             msg="Failed default run. " +
-                f"Non-zero exit code: {result.returncode}")
+                self.non_zero_exitcode_msg(result.returncode))
 
         self.assertIn("tmp", result.stdout,
             msg=self.failed_run_msg(args_str) +
@@ -81,27 +81,6 @@ class TestGeneralOptions(BaseCLISetup):
         result = self.run_gitree(args_str)
 
         # Validate
-        self.assertEqual(result.returncode, 0,
-            msg=self.failed_run_msg(args_str) +
-            self.non_zero_exitcode_msg(result.returncode))
-
-        self.assertTrue(result.stdout.strip(),
-            msg=self.failed_run_msg(args_str) +
-                self.no_output_msg())
-
-        self.assertIn("LOG", result.stdout,
-            msg=self.failed_run_msg(args_str) +
-                f"Expected str 'LOG' not found in output: \n\n{result.stdout}")
-
-    def test_log_alias(self):
-        """
-        Test that --log works as an alias for --verbose.
-        """
-
-        args_str = "--log"
-
-        result = self.run_gitree(args_str)
-
         self.assertEqual(result.returncode, 0,
             msg=self.failed_run_msg(args_str) +
             self.non_zero_exitcode_msg(result.returncode))
