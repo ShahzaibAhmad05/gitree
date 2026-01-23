@@ -92,11 +92,11 @@ gt -fe
 For copying all C++ code in your project, with interactive selection:
 
 ```bash
-gt --copy --interactive --only-types cpp
+gt --full --copy --interactive --only-types cpp
 
 # OR alternaitvely, using alias
-# -i for interactive and -c for copy
-gt -ci --only-types cpp
+# -i for interactive, -c for copy and -f for full
+gt -fci --only-types cpp
 ```
 
 <img
@@ -115,10 +115,10 @@ For zipping the whole project, respecting gitignore:
 
 ```bash
 # creates project.zip in the same directory
-gt --zip project
+gt --full --zip project
 
 # OR alternatively, using alias
-gt -z project
+gt -fz project
 ```
 
 <img
@@ -132,14 +132,14 @@ For copying the whole project into a single file:
 ```bash
 # Creates project.txt in the directory from where gt is run
 # Default format for export is tree
-gt --export project --format tree
+gt --full --export project --format tree
 
 # OR alternatively use alias
-gt -x project -f tree
+gt -fx project --format tree
 
 # OR use other formats
-gt -x project -f json
-gt -x project -f md
+gt -fx project --format json
+gt -fx project --format md
 ```
 
 <img
