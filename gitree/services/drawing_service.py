@@ -9,6 +9,7 @@ Static methods; draws into the output_buffer in AppContext
 # Default libs
 from typing import Any
 import json
+from pathlib import Path
 
 # Deps from this project
 from ..constants.constant import (FILE_EMOJI, NORMAL_DIR_EMOJI, EMPTY_DIR_EMOJI,
@@ -83,6 +84,22 @@ class DrawingService:
             p = _p(node.get("self") if _is_dir(node) else node)
             label = _name(p)
             em = _emoji_for(node)
+
+            # Add size for files when --size flag is used
+            if config.size and not _is_dir(node):
+                try:
+                    size_bytes = Path(p).stat().st_size
+                    if size_bytes < 1024:
+                        size_str = f" ({size_bytes}B)"
+                    elif size_bytes < 1024 * 1024:
+                        size_str = f" ({size_bytes / 1024:.1f}K)"
+                    elif size_bytes < 1024 * 1024 * 1024:
+                        size_str = f" ({size_bytes / (1024 * 1024):.1f}M)"
+                    else:
+                        size_str = f" ({size_bytes / (1024 * 1024 * 1024):.1f}G)"
+                    label += size_str
+                except:
+                    pass
 
             if config.no_color:
                 color = Color.default

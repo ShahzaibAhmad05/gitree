@@ -284,7 +284,10 @@ class ParsingService:
             help="Maximum file size in MB to include in exports (default: 1.0)")
         
         listing.add_argument("--override-files", action="store_true",
-            default=argparse.SUPPRESS, help="Override existing files") 
+            default=argparse.SUPPRESS, help="Override existing files")
+        
+        listing.add_argument("--size", action="store_true",
+            default=argparse.SUPPRESS, help="Show file sizes in the output") 
 
 
     @staticmethod
