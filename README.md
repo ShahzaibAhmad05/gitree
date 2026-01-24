@@ -134,12 +134,12 @@ For copying the whole project into a single file:
 # Default format for export is tree
 gt --full --export project --format tree
 
-# OR alternatively use alias
-gt -fx project --format tree
+# OR use -f alias for --full
+gt -f --export project --format tree
 
 # OR use other formats
-gt -fx project --format json
-gt -fx project --format md
+gt -f --export project --format json
+gt -f --export project --format md
 ```
 
 <img
