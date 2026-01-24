@@ -141,3 +141,117 @@ class TestSemanticOptions(BaseCLISetup):
         self.assertTrue(has_emoji,
             msg=self.failed_run_msg(args_str) +
                 f"No emojis found in combined flag output: \n\n{result.stdout}")
+
+
+    def test_only_types(self):
+        """
+        Test --only-types flag
+        Should include only Python files
+        """
+        # Vars
+        args_str = "--only-types py"
+
+        # Run
+        result = self.run_gitree(args_str)
+
+        # Validate
+        self.assertEqual(result.returncode, 0,
+            msg=self.failed_run_msg(args_str) +
+                self.non_zero_exitcode_msg(result.returncode))
+
+        self.assertTrue(result.stdout.strip(),
+            msg=self.failed_run_msg(args_str) +
+                self.no_output_msg())
+
+        # Should show Python files
+        self.assertIn("main.py", result.stdout,
+            msg=self.failed_run_msg(args_str) +
+                f"Expected 'main.py' in output: \n\n{result.stdout}")
+
+        self.assertIn("utils.py", result.stdout,
+            msg=self.failed_run_msg(args_str) +
+                f"Expected 'utils.py' in output: \n\n{result.stdout}")
+
+        # Should not show JavaScript files
+        self.assertNotIn("app.js", result.stdout,
+            msg=self.failed_run_msg(args_str) +
+                f"Did not expect 'app.js' in output: \n\n{result.stdout}")
+
+
+    def test_types_alias(self):
+        """
+        Test --types alias for --only-types
+        Should work the same as --only-types
+        """
+        # Vars
+        args_str = "--types py"
+
+        # Run
+        result = self.run_gitree(args_str)
+
+        # Validate
+        self.assertEqual(result.returncode, 0,
+            msg=self.failed_run_msg(args_str) +
+                self.non_zero_exitcode_msg(result.returncode))
+
+        # Should show Python files
+        self.assertIn("main.py", result.stdout,
+            msg=self.failed_run_msg(args_str) +
+                f"Expected 'main.py' in output: \n\n{result.stdout}")
+
+
+    def test_t_alias(self):
+        """
+        Test -t alias for --only-types
+        Should work the same as --only-types
+        """
+        # Vars
+        args_str = "-t py"
+
+        # Run
+        result = self.run_gitree(args_str)
+
+        # Validate
+        self.assertEqual(result.returncode, 0,
+            msg=self.failed_run_msg(args_str) +
+                self.non_zero_exitcode_msg(result.returncode))
+
+        # Should show Python files
+        self.assertIn("main.py", result.stdout,
+            msg=self.failed_run_msg(args_str) +
+                f"Expected 'main.py' in output: \n\n{result.stdout}")
+
+
+    def test_only_types_multiple_extensions(self):
+        """
+        Test --only-types with multiple file extensions
+        Should include both Python and JavaScript files
+        """
+        # Vars
+        args_str = "-t py js"
+
+        # Run
+        result = self.run_gitree(args_str)
+
+        # Validate
+        self.assertEqual(result.returncode, 0,
+            msg=self.failed_run_msg(args_str) +
+                self.non_zero_exitcode_msg(result.returncode))
+
+        # Should show both Python and JavaScript files
+        self.assertIn("main.py", result.stdout,
+            msg=self.failed_run_msg(args_str) +
+                f"Expected 'main.py' in output: \n\n{result.stdout}")
+
+        self.assertIn("app.js", result.stdout,
+            msg=self.failed_run_msg(args_str) +
+                f"Expected 'app.js' in output: \n\n{result.stdout}")
+
+        # Should not show markdown or json
+        self.assertNotIn("README.md", result.stdout,
+            msg=self.failed_run_msg(args_str) +
+                f"Did not expect 'README.md' in output: \n\n{result.stdout}")
+
+        self.assertNotIn("config.json", result.stdout,
+            msg=self.failed_run_msg(args_str) +
+                f"Did not expect 'config.json' in output: \n\n{result.stdout}")

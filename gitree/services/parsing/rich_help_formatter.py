@@ -178,8 +178,8 @@ class RichHelpFormatter(argparse.HelpFormatter):
             "Copy file contents and project structure to clipboard\n(great for LLM prompts)"
         )
         table.add_row(
-            "--only-types [EXT...]",
-            "Include only specific file types\n(e.g., --only-types py cpp tsx)"
+            "-t, --types, --only-types [EXT...]",
+            "Include only specific file types\n(e.g., -t py cpp tsx)"
         )
         
         panel = Panel(

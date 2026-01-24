@@ -128,7 +128,6 @@ class ParsingService:
 
         # Implementation for --only-types flag
         if getattr(args, "only_types", None):
-            args.paths = []
             exts = []
 
             for e in args.only_types:
@@ -138,11 +137,15 @@ class ParsingService:
 
             patterns = [f"**/*.{e}" for e in exts]
 
-            # merge with existing includes (don’t overwrite)
-            if getattr(args, "include", None) is not None:
-                args.include = list(dict.fromkeys(args.include + patterns))
-            else:
-                args.include = patterns
+            # Set paths to extension patterns (glob will find matching files)
+            args.paths = patterns
+
+            # Clear include since we're using paths directly
+            if getattr(args, "include", None) is None:
+                args.include = []
+
+            # Automatically increase depth to show matched files
+            args.max_depth = 5
 
 
         ctx.logger.log(ctx.logger.DEBUG, f"Corrected arguments: {args}")
@@ -328,9 +331,10 @@ class ParsingService:
             help="Copy file contents and project structure to clipboard (great for LLM prompts)")
         
         semantic.add_argument(
-            "--only-types",
+            "-t", "--types", "--only-types",
             nargs="+",
             metavar="EXT",
+            dest="only_types",
             default=argparse.SUPPRESS,
-            help="Include only specific code extensions (e.g., --only-types py cpp tsx)"
+            help="Include only specific code extensions (e.g., -t py cpp tsx)"
         )
