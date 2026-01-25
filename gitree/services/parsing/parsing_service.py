@@ -122,6 +122,13 @@ class ParsingService:
             args.zip = ParsingService._fix_output_path(ctx, args.zip, default_extension=".zip")
 
 
+        # Implementation for --no-limit flag
+        if getattr(args, "no_limit", False):
+            args.no_max_entries = True
+            args.no_max_items = True
+
+
+        # Implementation for --full flag
         if getattr(args, "full", False):
             args.max_depth = 5
 
@@ -297,6 +304,9 @@ class ParsingService:
         listing_control.add_argument("--no-max-items", action="store_true", 
             default=argparse.SUPPRESS, help="Disable --max-items limit")
         
+        listing_control.add_argument("--no-max-depth", action="store_true", 
+            default=argparse.SUPPRESS, help="Disable --max-depth limit (risky)")
+        
         listing_control.add_argument("-g", "--gitignore", action="store_true", 
             default=argparse.SUPPRESS, help="Enable .gitignore rules (respects .gitignore files)")
         
@@ -314,6 +324,10 @@ class ParsingService:
         semantic.add_argument("-f", "--full", action="store_true",
             default=argparse.SUPPRESS,
             help="Shortcut for --max-depth 5 - show full directory tree up to 5 levels deep")
+
+        semantic.add_argument("-n", "--no-limit", action="store_true",
+            default=argparse.SUPPRESS,
+            help="Shortcut for --no-max-depth and --no-max-entries")
         
         semantic.add_argument("-e", "--emoji", action="store_true", 
             default=argparse.SUPPRESS, 

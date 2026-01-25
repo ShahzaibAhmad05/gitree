@@ -163,8 +163,8 @@ class ItemsSelectionService:
                 f"Entered {curr_dir.name} at: {round((time.time()-start_time)*1000, 2)} ms")
 
 
-            # Implementation for --max-depth
-            if curr_depth > config.max_depth - 1:
+            # Implementation for --max-depth and --no-max-depth
+            if getattr(config, "no_max_depth", False) or curr_depth > config.max_depth - 1:
                 return resolved_root
             
 
