@@ -59,7 +59,7 @@ class ItemsSelectionService:
         
 
         # Start from the parent dir and keep adding items recursively
-        # includes resolving hidden_files, gitignore, include and exclude
+        # includes resolving hidden_files, gitignore (if enabled with -g), include and exclude
         resolved_items = ItemsSelectionService._resolve_items_rec_wrapper(ctx, config, 
             resolved_include_paths=resolved_include_paths, curr_depth=0,
             gitignore_matcher=GitIgnoreMatcher(), start_time=start_time,

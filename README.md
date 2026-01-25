@@ -46,7 +46,8 @@ Open a terminal in any project and run:
 
 ```bash
 # paths should default to the current working directory
-# This will scan gitignores by default
+# By default, gitignore files are NOT respected
+# Use -g to enable gitignore rules
 gitree
 
 # OR use this short alias
@@ -111,7 +112,7 @@ gt -fci --only-types cpp
   width="600"
 />
 
-For zipping the whole project, respecting gitignore:
+For zipping the whole project (use `-g` to respect gitignore):
 
 ```bash
 # creates project.zip in the same directory
@@ -119,6 +120,9 @@ gt --full --zip project
 
 # OR alternatively, using alias
 gt -fz project
+
+# To respect gitignore rules when zipping, add -g flag
+gt -fgz project
 ```
 
 <img
@@ -210,7 +214,7 @@ gt -fx project --format md
 | **Interactive Selection** | Gain full control of the output by reviewing what's selected by the file selection service |
 | **Copy Your Codebase** | Instantly copy the whole codebase file contents to your clipboard to paste into LLMs |
 | **Multiple Export Formats** | Export your codebase contents to files using tree, json and markdown formats |
-| **Zipping the Whole Project** | Create project archives that automatically respect `.gitignore` rules |
+| **Zipping the Whole Project** | Create project archives (optionally respecting `.gitignore` with `-g` flag) |
 | **Large/Binary Files Handling** | Automatically detects binary and large files and marks or skips them during export |
 
 
@@ -242,7 +246,7 @@ gt -fx project --format md
 
 | Argument          | Description                                                                                  |
 | ----------------- | -------------------------------------------------------------------------------------------- |
-| `-z`, `--zip`     | Create a **zip archive** of the given directory respecting **gitignore rules**.              |
+| `-z`, `--zip`     | Create a **zip archive** of the given directory (respects gitignore if `-g` is used).              |
 | `--export`        | Save **project structure** along with its **contents** to a file with the format specified using `--format`. |
 | `--format`        | **Format output** only. Options: `tree`, `json`, `md`. Default: `tree`.                      |
 
@@ -275,7 +279,7 @@ gt -fx project --format md
 | ------------------ | ------------------------------------------ |
 | `--no-max-entries` | Disable **`--max-entries` limit**.             |
 | `--no-max-items`   | Disable **`--max-items` limit**.               |
-| `--no-gitignore`   | Do not use **`.gitignore` rules**.             |
+| `-g`, `--gitignore`   | Enable **`.gitignore` rules** (respects .gitignore files).             |
 | `--no-files`       | Hide files (show only **directories**).        |
 
 </details>

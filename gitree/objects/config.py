@@ -121,7 +121,7 @@ class Config:
             "max_file_size": 1.0,
 
             # Listing override options
-            "no_gitignore": False,
+            "gitignore": False,
             "no_files": False,
             "no_max_items": False,
             "no_max_entries": False,

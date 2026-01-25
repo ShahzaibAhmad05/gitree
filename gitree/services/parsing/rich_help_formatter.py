@@ -56,7 +56,7 @@ class RichHelpFormatter(argparse.HelpFormatter):
     ╚██████╔╝██║   ██║   ██║  ██║███████╗███████╗
      ╚═════╝ ╚═╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚══════╝
             """, style="blue")
-        # subtitle = Text("Print a directory tree (respects .gitignore)", style="cyan italic")
+        # subtitle = Text("Print a directory tree (does not respect .gitignore by default)", style="cyan italic")
         
         header_text = Text()
         header_text.append(title)
@@ -205,7 +205,7 @@ class RichHelpFormatter(argparse.HelpFormatter):
         
         table.add_row(
             "-z, --zip [FILE]",
-            "Create a zip archive of the given directory\nrespecting gitignore rules"
+            "Create a zip archive of the given directory\n(respects gitignore if -g is used)"
         )
         table.add_row(
             "--export [FILE]",
@@ -344,8 +344,8 @@ class RichHelpFormatter(argparse.HelpFormatter):
             "Disable --max-items limit"
         )
         table.add_row(
-            "--no-gitignore",
-            "Do not use .gitignore rules"
+            "-g, --gitignore",
+            "Enable .gitignore rules (respects .gitignore files)"
         )
         table.add_row(
             "--no-files",

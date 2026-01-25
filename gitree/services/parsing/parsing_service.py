@@ -51,7 +51,7 @@ class ParsingService:
 
         ap = CustomArgumentParser(
             prog='gt',
-            description="Print a directory tree (respects .gitignore).",
+            description="Print a directory tree (does not respect .gitignore by default).",
             formatter_class=RichHelpFormatter,
             add_help=False  # Disable default help to use our custom one
         )
@@ -217,7 +217,7 @@ class ParsingService:
 
         io.add_argument("-z", "--zip", 
             default=argparse.SUPPRESS, 
-            help="Create a zip archive of the given directory respecting gitignore rules.")
+            help="Create a zip archive of the given directory (respects gitignore if -g is used).")
         
         io.add_argument("--export", 
             default=argparse.SUPPRESS, 
@@ -297,8 +297,8 @@ class ParsingService:
         listing_control.add_argument("--no-max-items", action="store_true", 
             default=argparse.SUPPRESS, help="Disable --max-items limit")
         
-        listing_control.add_argument("--no-gitignore", action="store_true", 
-            default=argparse.SUPPRESS, help="Do not use .gitignore rules")
+        listing_control.add_argument("-g", "--gitignore", action="store_true", 
+            default=argparse.SUPPRESS, help="Enable .gitignore rules (respects .gitignore files)")
         
         listing_control.add_argument("--no-files", "--only-dirs", action="store_true", 
             default=argparse.SUPPRESS, help="Hide files (show only directories)")
