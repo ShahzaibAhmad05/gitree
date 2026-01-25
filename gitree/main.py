@@ -38,7 +38,8 @@ def main() -> None:
 
     # Initialize app context
     ctx = AppContext()
-
+    print(f"Root: {ctx.target_path}")
+    print()
 
     # Prepare the config object (this has all the args now)
     config = ParsingService.run(ctx)
