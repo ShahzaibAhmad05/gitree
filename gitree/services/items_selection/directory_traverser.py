@@ -40,6 +40,10 @@ class DirectoryTraverser:
         self.path_resolver = path_resolver
         self.filter_applier = filter_applier
         self.perf_cache = PerformanceCache(max_cache_size=50000)
+
+        # gitignore tip flag
+        self.gitignore_tip_added = False
+        
     
     def traverse(self,
                 root_dir: Path,
@@ -120,9 +124,10 @@ class DirectoryTraverser:
                 gitignore_matcher.add_gitignore(new_gitignore, curr_dir)
 
                 # Add tip if gitignores found but not used
-                if not self.config.gitignore: 
+                if not self.config.gitignore and not self.gitignore_tip_added: 
                     self.ctx.tips_buffer.write(
                         "gitignore files were found, use '-g' to apply .gitignore rules")
+                    self.gitignore_tip_added = True
             
             items_added = 0
             
