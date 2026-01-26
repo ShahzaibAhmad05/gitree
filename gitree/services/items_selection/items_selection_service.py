@@ -63,7 +63,7 @@ class ItemsSelectionService:
             f"Selected includes at: {round((time.time()-start_time)*1000, 2)} ms")
 
         # Print root path
-        print("\n    Root: ", resolved_include_paths[-1])
+        ctx.output_buffer.write(f"    Root: {resolved_include_paths[-1]}\n")
 
         # Resolve exclude paths
         resolved_exclude_paths = path_resolver.resolve_paths(config.exclude)
