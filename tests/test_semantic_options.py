@@ -149,7 +149,7 @@ class TestSemanticOptions(BaseCLISetup):
         Should include only Python files
         """
         # Vars
-        args_str = "--only-types py"
+        args_str = "-f --only-types py"
 
         # Run
         result = self.run_gitree(args_str)
