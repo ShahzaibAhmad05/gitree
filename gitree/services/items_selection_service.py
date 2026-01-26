@@ -15,7 +15,6 @@ from ..objects.config import Config
 from ..objects.gitignore import GitIgnore
 from ..utilities.logging_utility import Logger
 from ..utilities.gitignore_utility import GitIgnoreMatcher
-from ..utilities.color_utility import Color
 
 
 class ItemsSelectionService:
@@ -66,16 +65,12 @@ class ItemsSelectionService:
 
         # Start from the parent dir and keep adding items recursively
         # includes resolving hidden_files, gitignore (if enabled with -g), include and exclude
-        gitignore_matcher = GitIgnoreMatcher()
         resolved_items = ItemsSelectionService._resolve_items_rec_wrapper(ctx, config, 
             resolved_include_paths=resolved_include_paths, curr_depth=0,
-            gitignore_matcher=gitignore_matcher, start_time=start_time,
+            gitignore_matcher=GitIgnoreMatcher(), start_time=start_time,
             curr_dir=resolved_include_paths[-1], 
             exclude_paths=resolved_exclude_paths[:-1])
         
-        # Print message if any files were ignored by gitignore
-        if gitignore_matcher.ignored_count > 0:
-            print(Color.grey(f"\n\t...{gitignore_matcher.ignored_count} item(s) hidden by .gitignore"))
 
         ctx.logger.log(Logger.DEBUG, 
             f"Exited ItemsSelectionService at: {round((time.time()-start_time)*1000, 2)} ms")
