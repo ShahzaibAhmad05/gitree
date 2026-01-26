@@ -45,6 +45,11 @@ class ItemsSelectionService:
             ctx, config, config.paths + config.include)
         ctx.logger.log(Logger.DEBUG, 
             f"Selected includes at: {round((time.time()-start_time)*1000, 2)} ms")
+        
+
+        # Print the root of the paths
+        print("\n\tRoot: ", resolved_include_paths[-1])
+
 
         resolved_exclude_paths = ItemsSelectionService._resolve_given_paths(
             ctx, config, config.exclude)

@@ -27,8 +27,10 @@ class GeneralOptionsService:
 
         if config.config_user:
             Config.open_config_in_editor(ctx)
+            exit(0)
         elif config.version:
             print(__version__)
+            exit(0)
 
         # Set no_printing to True if any were handled
         config.no_printing = config.config_user or config.version
