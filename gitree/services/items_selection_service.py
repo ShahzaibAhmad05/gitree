@@ -15,6 +15,7 @@ from ..objects.config import Config
 from ..objects.gitignore import GitIgnore
 from ..utilities.logging_utility import Logger
 from ..utilities.gitignore_utility import GitIgnoreMatcher
+from ..utilities.functions_utility import error_and_exit    
 
 
 class ItemsSelectionService:
@@ -119,6 +120,11 @@ class ItemsSelectionService:
                 
             else:
                 path = Path(path_str)
+                
+                # Validate if the path exists, to avoid errors later
+                if not path.exists():
+                    error_and_exit(f"Given value for path does not exist: {path}")
+
                 resolved_path = (base_path / path).resolve(strict=False)
                 calculated_paths.append(resolved_path)
 
