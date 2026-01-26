@@ -137,7 +137,6 @@ class Config:
     def _get_user_config_path() -> Path:
         """ Return the default user config path for gitree """
         path = Path(".gitree/config.json")
-        path.parent.mkdir(exist_ok=True, parents=True)
         return path
 
 
@@ -147,7 +146,7 @@ class Config:
         Creates a default config.json file with all defaults.
         """
         config_path = Config._get_user_config_path()
-
+        config_path.parent.mkdir(exist_ok=True, parents=True)
 
         # Get default config values
         config = Config._build_default_config()
@@ -184,6 +183,7 @@ class Config:
         Opens config.json in the default text editor.
         """
         config_path = Config._get_user_config_path()
+        config_path.parent.mkdir(exist_ok=True, parents=True)
 
         # Create config if it doesn't exist
         if not config_path.exists():

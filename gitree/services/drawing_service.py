@@ -10,6 +10,7 @@ Static methods; draws into the output_buffer in AppContext
 from typing import Any
 import json
 from pathlib import Path
+from shutil import get_terminal_size
 
 # Deps from this project
 from ..constants.constant import (FILE_EMOJI, NORMAL_DIR_EMOJI, EMPTY_DIR_EMOJI,
@@ -97,7 +98,15 @@ class DrawingService:
                         size_str = f" ({size_bytes / (1024 * 1024):.1f}M)"
                     else:
                         size_str = f" ({size_bytes / (1024 * 1024 * 1024):.1f}G)"
-                    label += size_str
+
+                    # Apply grey color to size string
+                    if not config.no_color:
+                        size_str = Color.grey(size_str)
+
+                    terminal_width = get_terminal_size((80, 24)).columns
+                    label += (" " * int(min(terminal_width*0.65 - 
+                        len(label) - len(size_str), terminal_width - 
+                        len(size_str) -  len(label)))) + size_str
                 except:
                     pass
 
