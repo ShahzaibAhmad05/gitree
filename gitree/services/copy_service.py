@@ -14,6 +14,7 @@ from ..objects.app_context import AppContext
 from ..objects.config import Config
 from ..services.export_service import ExportService
 from ..utilities.logging_utility import Logger
+from ..utilities.functions_utility import error_and_exit
 
 
 class CopyService:
@@ -47,7 +48,7 @@ class CopyService:
         try:
             pyperclip.copy("\n".join(lines))
         except Exception as e:
-            ctx.logger.log(Logger.ERROR, f"Failed to copy to clipboard: {e}")
+            error_and_exit(f"Failed to copy to clipboard: {e}")
 
         ctx.output_buffer.clear()
         print(f"Output copied to clipboard successfully.")

@@ -12,7 +12,7 @@ if sys.platform.startswith('win'):      # fix windows unicode error on CI
 # Deps from this project
 from .services.parsing import ParsingService
 from .services.general_options_service import GeneralOptionsService
-from .services.items_selection_service import ItemsSelectionService
+from .services.items_selection import ItemsSelectionService
 from .services.drawing_service import DrawingService
 from .services.zipping_service import ZippingService
 from .services.export_service import ExportService

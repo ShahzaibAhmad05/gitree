@@ -12,6 +12,7 @@ from typing import Any
 # Deps from this project
 from .app_context import AppContext
 from ..utilities.logging_utility import Logger
+from ..utilities.functions_utility import error_and_exit
 
 
 class Config:
@@ -103,6 +104,7 @@ class Config:
             "exclude_depth": 5,
             "include": [],
             "include_file_types": [],
+            "file_extensions": [],  # For --only-types optimization
             "files_first": False,
             "no_color": False,
             "no_contents": False,
@@ -173,7 +175,7 @@ class Config:
                 "Edit this file to customize default settings for this project.")
 
         except Exception as e:
-            ctx.logger.log(Logger.ERROR, f"Could not create config.json: {e}")
+            error_and_exit(ctx, f"Could not create config.json: {e}")
 
 
     @staticmethod
@@ -222,11 +224,9 @@ class Config:
                     subprocess.run(["notepad", str(config_path)], check=True)
 
                 else:
-                    ctx.logger.log(Logger.ERROR, f"Unsupported platform: {system}")
+                    error_and_exit(ctx, f"Unsupported platform: {system}")
 
         except Exception as e:
-            ctx.logger.log(Logger.ERROR, f"Could not open editor: {e}")
-            ctx.logger.log(Logger.ERROR, f"Please manually open: {config_path.absolute()}")
-            ctx.logger.log(Logger.ERROR,
-                f"Or set your EDITOR environment variable to your preferred editor.")
-        
+            error_and_exit(f"Could not open editor: {e}")
+            error_and_exit(f"Please manually open: {config_path.absolute()}")
+            error_and_exit(f"Or set your EDITOR environment variable to your preferred editor.")

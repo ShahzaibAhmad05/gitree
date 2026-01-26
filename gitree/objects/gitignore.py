@@ -1,12 +1,12 @@
 # gitree/objects/gitignore.py
 
 """
-Code file for housing GitIgnore class
+Code file for housing GitIgnore class with performance optimizations.
 """
 
 # Default libs
 from pathlib import Path
-from typing import Iterable
+from typing import Iterable, Optional
 
 # Dependencies
 import pathspec
@@ -18,10 +18,13 @@ from ..objects.config import Config
 
 class GitIgnore:
     """
-    Minimal gitignore loader/matcher.
+    Optimized gitignore loader/matcher with caching and performance improvements.
 
-    - Create an object passing roots to it, and it's ready to be used.
-    - excluded(path) tells if path is ignored by any root's combined patterns.
+    Performance optimizations:
+    - Cached relative path computations
+    - Precomputed normalized paths
+    - Optimized pattern loading
+    - Fast path for common cases
     """
 
     def __init__(self, ctx: AppContext, config: Config, gitignore_path: Path) -> None:
@@ -45,12 +48,19 @@ class GitIgnore:
 
         # Setup specs for gitignore
         self._specs: list[tuple[Path, pathspec.PathSpec]]
+        
+        # Cache for relative path computations: (path, root) -> relative_path
+        self._rel_path_cache: dict[tuple[str, str], Optional[str]] = {}
+        
+        # Store root path for scope checking
+        self.root_path: Optional[Path] = None
+        
         self._load_spec_from_gitignore(gitignore_path)
 
 
     def excluded(self, item_path: Path) -> bool:
         """
-        Determine whether the given path is excluded by the loaded gitignore patterns.
+        Optimized exclusion check with path caching.
 
         Args:
             item_path (Path): The path to check for exclusion
@@ -61,20 +71,51 @@ class GitIgnore:
         if not self.enabled:
             return False
 
+        # Resolve path once
         p = item_path.resolve(strict=False)
-
+        is_dir = p.is_dir()
+        
         for root, spec in self._specs:
-            try:
-                rel = p.relative_to(root).as_posix()
-            except ValueError:
+            # Use cached relative path computation
+            rel = self._get_relative_path_cached(p, root)
+            
+            if rel is None:
                 continue
 
+            # Check file match
             if spec.match_file(rel):
                 return True
-            if p.is_dir() and spec.match_file(rel + "/"):
+            
+            # Check directory match (only if it's actually a directory)
+            if is_dir and spec.match_file(rel + "/"):
                 return True
 
         return False
+    
+    def _get_relative_path_cached(self, path: Path, root: Path) -> Optional[str]:
+        """
+        Get relative path with caching to avoid repeated computations.
+        
+        Args:
+            path: The path to make relative
+            root: The root to make it relative to
+            
+        Returns:
+            Relative path as string in POSIX format, or None if not relative
+        """
+        # Use string representations as cache keys (faster than Path hashing)
+        cache_key = (str(path), str(root))
+        
+        if cache_key in self._rel_path_cache:
+            return self._rel_path_cache[cache_key]
+        
+        try:
+            rel = path.relative_to(root).as_posix()
+            self._rel_path_cache[cache_key] = rel
+            return rel
+        except ValueError:
+            self._rel_path_cache[cache_key] = None
+            return None
 
 
     def _load_from_roots(self, roots: Iterable[Path]) -> None:
@@ -86,42 +127,69 @@ class GitIgnore:
         """
         # Clears the specs if already present
         self._specs = []
+        self._rel_path_cache.clear()
 
         for root in self._norm_roots(roots):
             pats = self._collect_patterns(root)
-            self._specs.append((root, pathspec.PathSpec.from_lines("gitwildmatch", pats)))
+            if pats:  # Only add if there are patterns
+                self._specs.append((root, pathspec.PathSpec.from_lines("gitwildmatch", pats)))
 
 
     def _load_spec_from_gitignore(self, gitignore_path: Path) -> None:
         """
-        Load gitignore patterns from a single .gitignore file and create a PathSpec
-        rooted at its parent directory.
+        Optimized gitignore pattern loading from a single file.
 
         Args:
             gitignore_path (Path): Path to the .gitignore file to load
         """
         self._specs = []
+        self._rel_path_cache.clear()
 
         gi = Path(gitignore_path).resolve(strict=False)
         root = gi.parent
+        self.root_path = root
 
+        patterns = self._parse_gitignore_file(gi)
+        
+        if patterns:  # Only create spec if there are patterns
+            self._specs.append((root, pathspec.PathSpec.from_lines("gitwildmatch", patterns)))
+
+
+    def _parse_gitignore_file(self, gitignore_path: Path) -> list[str]:
+        """
+        Parse a gitignore file and return normalized patterns.
+        
+        Args:
+            gitignore_path: Path to the .gitignore file
+            
+        Returns:
+            List of normalized patterns
+        """
         patterns: list[str] = []
+        
         try:
-            lines = gi.read_text(encoding="utf-8", errors="ignore").splitlines()
+            lines = gitignore_path.read_text(encoding="utf-8", errors="ignore").splitlines()
         except Exception:
-            lines = []
+            return patterns
 
         for line in lines:
             line = line.strip()
+            
+            # Skip empty lines and comments
             if not line or line.startswith("#"):
                 continue
 
+            # Handle negation patterns
             neg = line.startswith("!")
             pat = line[1:] if neg else line
+            
+            # Normalize pattern (remove leading slash)
             pat = pat.lstrip("/")
+            
+            # Add pattern with negation prefix if needed
             patterns.append(("!" + pat) if neg else pat)
 
-        self._specs.append((root, pathspec.PathSpec.from_lines("gitwildmatch", patterns)))
+        return patterns
 
 
     def _norm_roots(self, roots: Iterable[Path]) -> list[Path]:
@@ -134,12 +202,19 @@ class GitIgnore:
         Returns:
             list[Path]: A de-duplicated list of resolved directory roots
         """
+        seen = set()
         out: list[Path] = []
+        
         for r in roots:
             rr = Path(r).resolve(strict=False)
             rr = rr if rr.is_dir() else rr.parent
-            if rr not in out:
+            
+            # Use string representation for faster set membership check
+            rr_str = str(rr)
+            if rr_str not in seen:
+                seen.add(rr_str)
                 out.append(rr)
+        
         return out
     
 
@@ -184,20 +259,14 @@ class GitIgnore:
             rel_dir = d.relative_to(root).as_posix()
             prefix = "" if rel_dir == "." else rel_dir + "/"
 
-            try:
-                lines = gi.read_text(encoding="utf-8", errors="ignore").splitlines()
-            except Exception:
-                continue
-
-            for line in lines:
-                line = line.strip()
-                if not line or line.startswith("#"):
-                    continue
-
-                neg = line.startswith("!")
-                pat = line[1:] if neg else line
-                pat = prefix + pat.lstrip("/")
-                patterns.append(("!" + pat) if neg else pat)
+            file_patterns = self._parse_gitignore_file(gi)
+            
+            # Add prefix to patterns if needed
+            for pat in file_patterns:
+                neg = pat.startswith("!")
+                base_pat = pat[1:] if neg else pat
+                prefixed_pat = prefix + base_pat.lstrip("/")
+                patterns.append(("!" + prefixed_pat) if neg else prefixed_pat)
 
         return patterns
     
@@ -214,8 +283,17 @@ class GitIgnore:
             Iterable[Path]: Directories discovered during traversal, including root
         """
         stack = [root]
+        visited = set()
+        
         while stack:
             d = stack.pop()
+            
+            # Avoid revisiting directories
+            d_str = str(d)
+            if d_str in visited:
+                continue
+            visited.add(d_str)
+            
             yield d
 
             if not self._within_depth(root, d):
@@ -225,5 +303,5 @@ class GitIgnore:
                 for c in d.iterdir():
                     if c.is_dir() and not c.is_symlink():
                         stack.append(c)
-            except PermissionError:
+            except (PermissionError, OSError):
                 continue

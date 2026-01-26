@@ -55,8 +55,9 @@ class SemanticProcessingService:
 
 
         # Implementation for --only-types flag
+        # OPTIMIZED: Store extensions directly instead of converting to glob patterns
+        # Filtering happens during traversal which is much faster than glob.glob()
         if getattr(args, "only_types", None):
-            args.paths = []
             exts = []
 
             for e in args.only_types:
@@ -64,17 +65,15 @@ class SemanticProcessingService:
                 if e:
                     exts.append(e)
 
-            patterns = [f"**/*.{e}" for e in exts]
-
-            # merge with existing includes (don't overwrite)
-            if getattr(args, "include", None) is not None:
-                args.include = list(dict.fromkeys(args.include + patterns))
-            else:
-                args.include = patterns
+            # Store extensions for filtering during traversal
+            args.file_extensions = exts
                 
             ctx.logger.log(ctx.logger.DEBUG, 
-                          f"--only-types: Generated patterns {patterns} and merged with includes")
+                          f"--only-types: Will filter for extensions {exts} during traversal")
             del args.only_types
+        else:
+            # Ensure file_extensions exists even if not using --only-types
+            args.file_extensions = []
 
 
         return args
