@@ -1,6 +1,6 @@
 # gitree 🌴
 
-**A replacement of "ls" for developers. An open-source python tool to analyze folder structures and to provide code context to LLMs. Published on PyPi**
+**An upgrade from "ls" for developers. An open-source tool to analyze folder structures and to provide code context to LLMs. Published on PyPi**
 
 <br>
 
@@ -45,9 +45,7 @@ pip install -U gitree
 Open a terminal in any project and run:
 
 ```bash
-# paths should default to the current working directory
-# By default, gitignore files are NOT respected
-# Use -g to enable gitignore rules
+# This should print the structure of the current working directory
 gitree
 
 # OR use this short alias
@@ -60,44 +58,46 @@ gt
   width="600"
 />
 
-Now try this for better visuals:
+Now try using `--full` for printing full directory structure:
 
 ```bash
-gt --emoji
+gt --full
 
-# OR -e as alias for --emoji
-gt -e
+# OR -f as alias for --full
+gt -f
 ```
 
 <img
-  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/emoji_hidden.jpg"
+  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/full_output.jpg"
   alt="gitree demo"
   width="600"
 />
 
-For printing the full structure of any directory or project:
+Try using `--emoji` for better visuals:
 
 ```
-gt --full -e
+gt --full --emoji
 
-# OR -f as alias for --full (and then -e can just be used together with it)
+# You can also use -f and -e together like this
 gt -fe
 ```
 
 <img
-  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/emoji_full.jpg"
+  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/full_output_emoji.jpg"
   alt="gitree demo"
   width="600"
 />
 
-For copying all C++ code in your project, with interactive selection:
+### 🧠 This is where it gets useful
+
+For copying all code files in your project, with interactive selection:
 
 ```bash
-gt --full --copy --interactive --only-types cpp
+gt --code --copy --interactive
 
 # OR alternaitvely, using short aliases
 # -i for interactive, -c for copy, -f for full, -t for types
-gt -fcit cpp
+gt --code -ci
 ```
 
 <img
@@ -107,7 +107,7 @@ gt -fcit cpp
 />
 
 <img
-  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/copy_cpp_interactive.jpg"
+  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/copy_code_interactive.jpg"
   alt="gitree demo"
   width="600"
 />
@@ -116,13 +116,16 @@ For zipping the whole project (use `-g` to respect gitignore):
 
 ```bash
 # creates project.zip in the same directory
-gt --full --zip project
+gt --zip project
 
 # OR alternatively, using alias
-gt -fz project
+gt -z project
 
 # To respect gitignore rules when zipping, add -g flag
-gt -fgz project
+gt -gz project
+
+# To zip only the code files use --code
+gt -z project --code
 ```
 
 <img
@@ -131,19 +134,19 @@ gt -fgz project
   width="600"
 />
 
-For copying the whole project into a single file:
+For dumping the whole project into a single file:
 
 ```bash
 # Creates project.txt in the directory from where gt is run
 # Default format for export is tree
-gt --full --export project --format tree
+gt --export project --format tree
 
 # OR using aliases
-gt -fx project --format tree
+gt -x project --format tree
 
 # OR use other formats
-gt -fx project --format json
-gt -fx project --format md
+gt -x project --format json
+gt -x project --format md
 ```
 
 <img
@@ -240,7 +243,7 @@ gt -fx project --format md
 | `-e`, `--emoji`   | Show **emojis** in the output for better visual clarity.                                      |
 | `-i`, `--interactive` | Use **interactive mode** for manual file selection after automatic filtering.            |
 | `-c`, `--copy`    | **Copy** file contents and project structure to **clipboard** (great for LLM prompts).        |
-| `-t`, `--types`, `--only-types` | Include **only specific code extensions** (e.g., `-t py cpp tsx`).            |
+| `--code` | Include **only code extensions**            |
 
 ### Output & Export Options
 
