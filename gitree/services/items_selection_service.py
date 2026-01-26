@@ -126,11 +126,7 @@ class ItemsSelectionService:
         # Replace the placeholder for the parent path in the calculated paths
         if calculated_paths:
             try:
-                common_path = Path(os.path.commonpath(calculated_paths))
-                # If common path is a file, use its parent directory instead
-                if common_path.is_file():
-                    common_path = common_path.parent
-                calculated_paths.append(common_path)
+                calculated_paths.append(Path(os.path.commonpath(calculated_paths)))
             except ValueError as e:
                 print(e)
                 exit(1)

@@ -93,11 +93,11 @@ gt -fe
 For copying all C++ code in your project, with interactive selection:
 
 ```bash
-gt --full --copy --interactive --types cpp
+gt --full --copy --interactive --only-types cpp
 
 # OR alternaitvely, using short aliases
 # -i for interactive, -c for copy, -f for full, -t for types
-gt -fci -t cpp
+gt -fcit cpp
 ```
 
 <img
@@ -138,12 +138,12 @@ For copying the whole project into a single file:
 # Default format for export is tree
 gt --full --export project --format tree
 
-# OR use -f alias for --full
-gt -f --export project --format tree
+# OR using aliases
+gt -fx project --format tree
 
 # OR use other formats
-gt -f --export project --format json
-gt -f --export project --format md
+gt -fx project --format json
+gt -fx project --format md
 ```
 
 <img
