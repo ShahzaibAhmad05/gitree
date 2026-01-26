@@ -48,7 +48,7 @@ class ItemsSelectionService:
         
 
         # Print the root of the paths
-        print("\n\tRoot: ", resolved_include_paths[-1])
+        print("\n    Root: ", resolved_include_paths[-1])
 
 
         resolved_exclude_paths = ItemsSelectionService._resolve_given_paths(
@@ -169,7 +169,7 @@ class ItemsSelectionService:
 
 
             # Implementation for --max-depth and --no-max-depth
-            if getattr(config, "no_max_depth", False) or curr_depth > config.max_depth - 1:
+            if not config.no_max_depth and curr_depth > config.max_depth - 1:
                 return resolved_root
             
 
@@ -223,12 +223,11 @@ class ItemsSelectionService:
 
                 # If reached --max-items or --max-entries, then exit
                 # NOTE: This is ok for now, but needs to be corrected later
-                if (not config.no_max_items and items_added >= config.max_items):
+                if not config.no_max_items and items_added >= config.max_items:
                     resolved_root["remaining_items"] = len(children_to_add) - items_added
                     break
                     
-                if (not config.no_max_entries and 
-                    curr_entries >= config.max_entries):
+                if not config.no_max_entries and curr_entries >= config.max_entries:
                     truncated_entries = True
                     break
 

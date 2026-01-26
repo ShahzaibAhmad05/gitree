@@ -40,6 +40,7 @@ class SemanticProcessingService:
         if getattr(args, "no_limit", False):
             args.no_max_entries = True
             args.no_max_items = True
+            args.no_max_depth = True
             ctx.logger.log(ctx.logger.DEBUG, 
                           "--no-limit: Setting no_max_entries=True and no_max_items=True")
             

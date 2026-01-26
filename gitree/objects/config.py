@@ -126,6 +126,7 @@ class Config:
             "interactive": False,
             "emoji": False,
             "verbose": False,
+            "no_max_depth": False,
         }
     
 
