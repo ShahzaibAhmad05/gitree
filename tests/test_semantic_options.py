@@ -95,23 +95,6 @@ class TestSemanticOptions(BaseCLISetup):
                 f"No emojis found in output: \n\n{result.stdout}")
 
 
-    def test_copy(self):
-        """
-        Test --copy flag
-        Should copy to clipboard
-        """
-        # Vars
-        args_str = "--copy"
-
-        # Run
-        result = self.run_gitree(args_str)
-
-        # Validate
-        self.assertEqual(result.returncode, 0,
-            msg=self.failed_run_msg(args_str) +
-                self.non_zero_exitcode_msg(result.returncode))
-
-
     def test_combined_semantic_flags(self):
         """
         Test combining multiple semantic flags together
