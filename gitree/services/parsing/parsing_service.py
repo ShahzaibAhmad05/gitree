@@ -1,15 +1,12 @@
 # gitree/services/parsing/parsing_service.py
 
 """
-Code file for housing ParsingService class. Includes arguments adding,
-correction, and processing for argparse.
+Code file for housing ParsingService class. Handles argument parsing setup.
 """
 
 # Default libs
 import argparse
 import sys
-
-# Dependencies
 from pathlib import Path
 
 # Imports from this project
@@ -17,6 +14,8 @@ from ...utilities.functions_utility import max_items_int, max_entries_int
 from ...objects.config import Config
 from ...objects.app_context import AppContext
 from .rich_help_formatter import RichHelpFormatter
+from .fixing_service import FixingService
+from .semantic_processing_service import SemanticProcessingService
 
 
 class CustomArgumentParser(argparse.ArgumentParser):
@@ -31,8 +30,8 @@ class ParsingService:
     """
     CLI parsing service for gitree tool. 
 
-    Wraps argument parsing and validation into a class. Call run
-    to get a Config object.
+    Handles argument parsing setup and delegates to specialized services
+    for semantic processing and argument fixing.
     """
 
     @staticmethod
@@ -51,7 +50,7 @@ class ParsingService:
 
         ap = CustomArgumentParser(
             prog='gt',
-            description="Print a directory tree (respects .gitignore).",
+            description="Print a directory tree (does not respect .gitignore by default).",
             formatter_class=RichHelpFormatter,
             add_help=False  # Disable default help to use our custom one
         )
@@ -66,11 +65,11 @@ class ParsingService:
         args = ap.parse_args()
         ctx.logger.log(ctx.logger.DEBUG, f"Parsed arguments: {args}")
 
+        # Process semantic flags first (e.g., --full, --no-limit, --only-types)
+        args = SemanticProcessingService.process_semantic_flags(ctx, args)
 
-        # Correct the arguments before returning to avoid complexity
-        # in implementation in main function, then return a Config object
-        args = ParsingService._correct_args(ctx, args)
-
+        # Then correct the arguments (e.g., fix output paths)
+        args = FixingService.correct_args(ctx, args)
 
         # Prepare the config object to return from this function
         config = Config(ctx, args)
@@ -78,99 +77,8 @@ class ParsingService:
         if not config.no_color:
             config.no_color = config.copy or config.export
 
-        return ParsingService._fix_contradicting_args(ctx, config)
-    
-
-    @staticmethod
-    def _fix_contradicting_args(ctx: AppContext, config: Config) -> Config:
-        """
-        Prevents unexpected behaviour of the tool if contradictory options are used.
-        """
-        # Remove intersecting values for include and exclude patterns
-        include_set = set(config.include)
-        exclude_set = set(config.exclude)
-        common_values = include_set & exclude_set
-
-        if common_values:
-            ctx.logger.log(
-                ctx.logger.WARNING,
-                "--include and --exclude patterns have overlapping values. "
-                "These values will be removed from both lists"
-            )
-            config.include = list(include_set - common_values)
-            config.exclude = list(exclude_set - common_values)
-
-        return config
-
-    
-    @staticmethod
-    def _correct_args(ctx: AppContext, args: argparse.Namespace) -> argparse.Namespace:
-        """
-        Correct and validate CLI arguments in place.
-        """
-        
-        # Correcting export path
-        if getattr(args, "export", None) is not None:
-            args.export = ParsingService._fix_output_path(
-                ctx, args.export,
-                default_extensions={"tree": ".txt", "json": ".json", "md": ".md"},
-                format_str=args.format)
-            
-
-        # Correcting zip path
-        if getattr(args, "zip", None):
-            args.zip = ParsingService._fix_output_path(ctx, args.zip, default_extension=".zip")
-
-
-        if getattr(args, "full", False):
-            args.max_depth = 5
-
-
-        # Implementation for --only-types flag
-        if getattr(args, "only_types", None):
-            args.paths = []
-            exts = []
-
-            for e in args.only_types:
-                e = e.lower().lstrip(".")
-                if e:
-                    exts.append(e)
-
-            patterns = [f"**/*.{e}" for e in exts]
-
-            # merge with existing includes (don’t overwrite)
-            if getattr(args, "include", None) is not None:
-                args.include = list(dict.fromkeys(args.include + patterns))
-            else:
-                args.include = patterns
-
-
-        ctx.logger.log(ctx.logger.DEBUG, f"Corrected arguments: {args}")
-        return args
-    
-
-    @staticmethod
-    def _fix_output_path(
-        ctx: AppContext, 
-        output_path: str, 
-        default_extension: str = "",
-        default_extensions: dict | None = None, 
-        format_str: str = ""
-    ) -> str:
-        """
-        Ensure the output path has a correct extension.
-        """
-        default_extensions = default_extensions or {}
-        path = Path(output_path)
-
-        if path.suffix == "":
-            if default_extension:
-                path = path.with_suffix(default_extension)
-            elif format_str and format_str in default_extensions:
-                path = path.with_suffix(default_extensions[format_str])
-
-        return str(path)
-
+        # Fix any contradicting arguments
+        return FixingService.fix_contradicting_args(ctx, config)
 
     @staticmethod
     def _add_positional_args(ctx: AppContext, ap: argparse.ArgumentParser):
@@ -217,9 +125,9 @@ class ParsingService:
 
         io.add_argument("-z", "--zip", 
             default=argparse.SUPPRESS, 
-            help="Create a zip archive of the given directory respecting gitignore rules.")
+            help="Create a zip archive of the given directory (respects gitignore if -g is used).")
         
-        io.add_argument("--export", 
+        io.add_argument("-x", "--export", 
             default=argparse.SUPPRESS, 
             help="Save project structure along with it's contents to a file"
                 " with the format specified using --format")
@@ -300,8 +208,11 @@ class ParsingService:
         listing_control.add_argument("--no-max-items", action="store_true", 
             default=argparse.SUPPRESS, help="Disable --max-items limit")
         
-        listing_control.add_argument("--no-gitignore", action="store_true", 
-            default=argparse.SUPPRESS, help="Do not use .gitignore rules")
+        listing_control.add_argument("--no-max-depth", action="store_true", 
+            default=argparse.SUPPRESS, help="Disable --max-depth limit (risky)")
+        
+        listing_control.add_argument("-g", "--gitignore", action="store_true", 
+            default=argparse.SUPPRESS, help="Enable .gitignore rules (respects .gitignore files)")
         
         listing_control.add_argument("--no-files", "--only-dirs", action="store_true", 
             default=argparse.SUPPRESS, help="Hide files (show only directories)")
@@ -317,6 +228,10 @@ class ParsingService:
         semantic.add_argument("-f", "--full", action="store_true",
             default=argparse.SUPPRESS,
             help="Shortcut for --max-depth 5 - show full directory tree up to 5 levels deep")
+
+        semantic.add_argument("-n", "--no-limit", action="store_true",
+            default=argparse.SUPPRESS,
+            help="Shortcut for --no-max-depth and --no-max-entries")
         
         semantic.add_argument("-e", "--emoji", action="store_true", 
             default=argparse.SUPPRESS, 
@@ -331,9 +246,10 @@ class ParsingService:
             help="Copy file contents and project structure to clipboard (great for LLM prompts)")
         
         semantic.add_argument(
-            "--only-types",
+            "-t", "--types", "--only-types",
             nargs="+",
             metavar="EXT",
+            dest="only_types",
             default=argparse.SUPPRESS,
-            help="Include only specific code extensions (e.g., --only-types py cpp tsx)"
+            help="Include only specific code extensions (e.g., -t py cpp tsx)"
         )

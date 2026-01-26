@@ -45,6 +45,11 @@ class ItemsSelectionService:
             ctx, config, config.paths + config.include)
         ctx.logger.log(Logger.DEBUG, 
             f"Selected includes at: {round((time.time()-start_time)*1000, 2)} ms")
+        
+
+        # Print the root of the paths
+        print("\n    Root: ", resolved_include_paths[-1])
+
 
         resolved_exclude_paths = ItemsSelectionService._resolve_given_paths(
             ctx, config, config.exclude)
@@ -59,7 +64,7 @@ class ItemsSelectionService:
         
 
         # Start from the parent dir and keep adding items recursively
-        # includes resolving hidden_files, gitignore, include and exclude
+        # includes resolving hidden_files, gitignore (if enabled with -g), include and exclude
         resolved_items = ItemsSelectionService._resolve_items_rec_wrapper(ctx, config, 
             resolved_include_paths=resolved_include_paths, curr_depth=0,
             gitignore_matcher=GitIgnoreMatcher(), start_time=start_time,
@@ -163,8 +168,8 @@ class ItemsSelectionService:
                 f"Entered {curr_dir.name} at: {round((time.time()-start_time)*1000, 2)} ms")
 
 
-            # Implementation for --max-depth
-            if curr_depth > config.max_depth - 1:
+            # Implementation for --max-depth and --no-max-depth
+            if not config.no_max_depth and curr_depth > config.max_depth - 1:
                 return resolved_root
             
 
@@ -218,12 +223,11 @@ class ItemsSelectionService:
 
                 # If reached --max-items or --max-entries, then exit
                 # NOTE: This is ok for now, but needs to be corrected later
-                if (not config.no_max_items and items_added >= config.max_items):
+                if not config.no_max_items and items_added >= config.max_items:
                     resolved_root["remaining_items"] = len(children_to_add) - items_added
                     break
                     
-                if (not config.no_max_entries and 
-                    curr_entries >= config.max_entries):
+                if not config.no_max_entries and curr_entries >= config.max_entries:
                     truncated_entries = True
                     break
 

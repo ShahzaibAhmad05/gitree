@@ -40,7 +40,7 @@ class GitIgnore:
         self.config = config
 
         # Object attr
-        self.enabled = not config.no_gitignore
+        self.enabled = config.gitignore
         self.gitignore_depth = config.gitignore_depth
 
         # Setup specs for gitignore

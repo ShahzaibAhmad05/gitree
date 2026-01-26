@@ -56,7 +56,7 @@ class RichHelpFormatter(argparse.HelpFormatter):
     ╚██████╔╝██║   ██║   ██║  ██║███████╗███████╗
      ╚═════╝ ╚═╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚══════╝
             """, style="blue")
-        # subtitle = Text("Print a directory tree (respects .gitignore)", style="cyan italic")
+        # subtitle = Text("Print a directory tree (does not respect .gitignore by default)", style="cyan italic")
         
         header_text = Text()
         header_text.append(title)
@@ -178,8 +178,8 @@ class RichHelpFormatter(argparse.HelpFormatter):
             "Copy file contents and project structure to clipboard\n(great for LLM prompts)"
         )
         table.add_row(
-            "--only-types [EXT...]",
-            "Include only specific file types\n(e.g., --only-types py cpp tsx)"
+            "-t, --types, --only-types [EXT...]",
+            "Include only specific file types\n(e.g., -t py cpp tsx)"
         )
         
         panel = Panel(
@@ -205,10 +205,10 @@ class RichHelpFormatter(argparse.HelpFormatter):
         
         table.add_row(
             "-z, --zip [FILE]",
-            "Create a zip archive of the given directory\nrespecting gitignore rules"
+            "Create a zip archive of the given directory\n(respects gitignore if -g is used)"
         )
         table.add_row(
-            "--export [FILE]",
+            "-x, --export [FILE]",
             "Save project structure along with its contents to a file\nwith the format specified using --format"
         )
         table.add_row(
@@ -344,8 +344,8 @@ class RichHelpFormatter(argparse.HelpFormatter):
             "Disable --max-items limit"
         )
         table.add_row(
-            "--no-gitignore",
-            "Do not use .gitignore rules"
+            "-g, --gitignore",
+            "Enable .gitignore rules (respects .gitignore files)"
         )
         table.add_row(
             "--no-files",
