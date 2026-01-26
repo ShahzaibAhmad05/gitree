@@ -83,18 +83,11 @@ class Config:
         """
         Returns the default configuration values.
 
-        NOTE: This must contain all the configuration keys, since it is
-        meant to be a last resort.
+        NOTE: This contains only listing options and IO options.
+        Semantic flags and general options are processed separately and not stored here.
         """
 
         return {
-            # General Options
-            "help": False,
-            "version": False,
-            "config_user": False,
-            "no_config": False,
-            "verbose": False,
-
             # Output & export options
             "zip": "",
             "export": "",
@@ -110,9 +103,6 @@ class Config:
             "exclude_depth": 5,
             "include": [],
             "include_file_types": [],
-            "copy": False,
-            "emoji": False,
-            "interactive": False,
             "files_first": False,
             "no_color": False,
             "no_contents": False,
@@ -121,13 +111,22 @@ class Config:
             "max_file_size": 1.0,
 
             # Listing override options
-            "no_gitignore": False,
+            "gitignore": False,
             "no_files": False,
             "no_max_items": False,
             "no_max_entries": False,
 
             # Inner tool control (not to be given to the user)
-            "no_printing": False  
+            "no_printing": False,
+
+            # Other args
+            "copy": False,
+            "config_user": False,
+            "version": False,
+            "interactive": False,
+            "emoji": False,
+            "verbose": False,
+            "no_max_depth": False,
         }
     
 
@@ -150,11 +149,11 @@ class Config:
         # Get default config values
         config = Config._build_default_config()
 
-        # Delete "system/cli only" keys from the config dict
+        # Semantic and general options are not stored in config
+        # They are processed at runtime and not saved to config.json
+
+        # Delete "system/cli only" key from the config dict
         del config["no_printing"]
-        del config["version"]
-        del config["no_config"]
-        del config["config_user"]
 
 
         try:
