@@ -247,7 +247,7 @@ gt -fx project --format md
 | Argument          | Description                                                                                  |
 | ----------------- | -------------------------------------------------------------------------------------------- |
 | `-z`, `--zip`     | Create a **zip archive** of the given directory (respects gitignore if `-g` is used).              |
-| `--export`        | Save **project structure** along with its **contents** to a file with the format specified using `--format`. |
+| `-x`, `--export`        | Save **project structure** along with its **contents** to a file with the format specified using `--format`. |
 | `--format`        | **Format output** only. Options: `tree`, `json`, `md`. Default: `tree`.                      |
 
 <details>

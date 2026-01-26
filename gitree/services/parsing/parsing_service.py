@@ -226,7 +226,7 @@ class ParsingService:
             default=argparse.SUPPRESS, 
             help="Create a zip archive of the given directory (respects gitignore if -g is used).")
         
-        io.add_argument("--export", 
+        io.add_argument("-x", "--export", 
             default=argparse.SUPPRESS, 
             help="Save project structure along with it's contents to a file"
                 " with the format specified using --format")

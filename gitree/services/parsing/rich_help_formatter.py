@@ -208,7 +208,7 @@ class RichHelpFormatter(argparse.HelpFormatter):
             "Create a zip archive of the given directory\n(respects gitignore if -g is used)"
         )
         table.add_row(
-            "--export [FILE]",
+            "-x, --export [FILE]",
             "Save project structure along with its contents to a file\nwith the format specified using --format"
         )
         table.add_row(
