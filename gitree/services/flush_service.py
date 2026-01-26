@@ -34,9 +34,12 @@ class FlushService:
 
         if not config.no_printing and not ctx.output_buffer.empty(): print()
 
+
         # print the export only if not in no_printing and buffer not empty
         if not config.no_printing and not ctx.output_buffer.empty():
             ctx.output_buffer.flush()
+            ctx.tips_buffer.flush()
+
 
         # print the log if verbose mode
         if config.verbose:
@@ -44,5 +47,6 @@ class FlushService:
                 print()
             print("LOG:")
             ctx.logger.flush()
+            
 
         if not config.no_printing and not ctx.output_buffer.empty(): print()

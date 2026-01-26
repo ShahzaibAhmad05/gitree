@@ -118,6 +118,11 @@ class DirectoryTraverser:
                 # Create a new GitIgnore and add to matcher
                 new_gitignore = GitIgnore(self.ctx, self.config, gitignore_path)
                 gitignore_matcher.add_gitignore(new_gitignore, curr_dir)
+
+                # Add tip if gitignores found but not used
+                if not self.config.gitignore: 
+                    self.ctx.tips_buffer.write(
+                        "gitignore files were found, use '-g' to apply .gitignore rules")
             
             items_added = 0
             

@@ -174,3 +174,48 @@ class OutputBuffer(Logger):
         for message in self.get_value():
             print(message)
     
+
+class TipsBuffer(Logger):
+    """
+    A custom output buffer to capture stdout writes. A wrapper around Logger.
+    """
+
+    def __init__(self):
+        """
+        Initialize the output buffer with a reference to a Logger.
+        """
+        super().__init__()
+
+
+    def write(self, message: str, no_color: bool=True) -> None:
+        """
+        Write a message to the logger's output storage.
+
+        Args:
+            message: The message to write
+        """
+        super().log(level=None, message=Color.grey("... " + message))
+
+
+    def get_value(self) -> list[str]:
+        """
+        Get the entire contents of the output buffer as a list of strings.
+
+        Returns:
+            str: The contents of the output buffer
+        """
+        return super().get_logs()
+    
+
+    def flush(self) -> None:
+        """ 
+        A modification for the parent class flush() function. Flushes the
+        buffer to the terminal.
+        """
+
+        if super().empty():
+            return      # Do not print anything
+
+        for message in self.get_value():
+            print(message)
+    

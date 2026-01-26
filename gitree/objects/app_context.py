@@ -8,7 +8,7 @@ for the app context.
 """
 
 # Deps in the same project
-from ..utilities.logging_utility import Logger, OutputBuffer
+from ..utilities.logging_utility import Logger, OutputBuffer, TipsBuffer
 
 
 class AppContext:
@@ -16,3 +16,4 @@ class AppContext:
         """ Constructor for app ctx """
         self.logger = Logger()
         self.output_buffer = OutputBuffer()
+        self.tips_buffer = TipsBuffer()
