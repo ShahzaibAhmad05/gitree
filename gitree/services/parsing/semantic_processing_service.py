@@ -31,10 +31,23 @@ class SemanticProcessingService:
             Arguments with semantic flags processed
         """
 
-        # Set dependent semantics: uses other flags to set new semantics
-        # Simulation of smart behaviour
+        # Set dependent semantics: uses primitive flags to set values for semantics
+        # REAL Simulation of smart behaviour here
         SemanticProcessingService._set_dependent_semantics(ctx, args)
         
+
+        # Implementation for --code flag
+        if getattr(args, "code", False):
+            args.only_types = [
+                "py", "js", "ts", "java", "c", "cpp", "h",
+                "cs", "go", "rs", "rb", "php",
+                "swift", "kt", "scala", "dart",
+                "r", "lua", "sh"]
+            ctx.logger.log(ctx.logger.DEBUG, 
+                          f"--code: Setting only_types to {len(args.only_types)} common code extensions")
+            
+            del args.code
+
 
         # Implementation for --no-limit flag
         if getattr(args, "no_limit", False):

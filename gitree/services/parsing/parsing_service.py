@@ -232,6 +232,10 @@ class ParsingService:
         semantic.add_argument("-n", "--no-limit", action="store_true",
             default=argparse.SUPPRESS,
             help="Shortcut for --no-max-depth and --no-max-entries")
+
+        semantic.add_argument("--code", action="store_true",
+            default=argparse.SUPPRESS,
+            help="Shortcut for selecting common code file types")
         
         semantic.add_argument("-e", "--emoji", action="store_true", 
             default=argparse.SUPPRESS, 
