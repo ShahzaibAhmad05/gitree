@@ -30,13 +30,19 @@ class SemanticProcessingService:
         Returns:
             Arguments with semantic flags processed
         """
+
+        # Set dependent semantics: uses other flags to set new semantics
+        # Simulation of smart behaviour
+        SemanticProcessingService._set_dependent_semantics(ctx, args)
         
+
         # Implementation for --no-limit flag
         if getattr(args, "no_limit", False):
             args.no_max_entries = True
             args.no_max_items = True
             ctx.logger.log(ctx.logger.DEBUG, 
                           "--no-limit: Setting no_max_entries=True and no_max_items=True")
+            
             del args.no_limit
 
 
@@ -71,3 +77,26 @@ class SemanticProcessingService:
 
 
         return args
+
+
+    def _set_dependent_semantics(ctx: AppContext, args: argparse.Namespace) -> argparse.Namespace:
+        """
+        Set dependent argument values based on semantic flags.
+        
+        Args:
+            ctx: Application context
+            args: Parsed arguments namespace
+            
+        Returns:
+            Arguments with dependent semantics set
+        """
+        
+        # Use no-limit if outputting to file or zip or copy
+        if getattr(args, "zip", False) or getattr(args, "export", False) or getattr(args, "copy", False):
+            args.no_limit = True
+            ctx.logger.log(ctx.logger.DEBUG, 
+                          "--detailed: Setting verbose=True")
+
+
+        return args 
+    

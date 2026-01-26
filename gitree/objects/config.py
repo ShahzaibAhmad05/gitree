@@ -117,7 +117,15 @@ class Config:
             "no_max_entries": False,
 
             # Inner tool control (not to be given to the user)
-            "no_printing": False  
+            "no_printing": False,
+
+            # Other args
+            "copy": False,
+            "config_user": False,
+            "version": False,
+            "interactive": False,
+            "emoji": False,
+            "verbose": False,
         }
     
 
