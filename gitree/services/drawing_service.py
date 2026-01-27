@@ -116,6 +116,8 @@ class DrawingService:
                 color = Color.grey
             elif _is_dir(node):
                 color = Color.cyan
+            elif p.lower().endswith(".zip"):
+                color = Color.red
             else:
                 color = Color.default
 
