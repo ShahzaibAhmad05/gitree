@@ -38,9 +38,7 @@ pip install -U gitree
 
 ---
 
-### 💡 Usage
-
-**To literally get started, I would recommend doing this:**
+### 💡 Getting Started
 
 Open a terminal in any project and run:
 
