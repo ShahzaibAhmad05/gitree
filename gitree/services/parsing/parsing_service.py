@@ -194,7 +194,7 @@ class ParsingService:
         listing.add_argument("--override-files", action="store_true",
             default=argparse.SUPPRESS, help="Override existing files")
         
-        listing.add_argument("--size", action="store_true",
+        listing.add_argument("-s", "--size", action="store_true",
             default=argparse.SUPPRESS, help="Show file sizes in the output") 
 
 

@@ -278,6 +278,7 @@ gt -fx project --fmt json
 | `--no-contents-for [path ...]` | Exclude **contents for specific files** for export/copy.                              |
 | `--max-file-size`            | **Maximum file size** in MB to include in exports (default: 1.0).                       |
 | `--override-files`           | **Override existing files**.                                                            |
+| `-s`, `--size`                | Show **file sizes** in the output.                                                       |
 
 ### Listing Override Options
 
