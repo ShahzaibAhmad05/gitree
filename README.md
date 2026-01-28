@@ -209,20 +209,7 @@ gt -fx project --fmt json
 
 ---
 
-## ✨ Overall Features
 
-| Feature                           | Description                                                                   |
-| --------------------------------- | ----------------------------------------------------------------------------- |
-| **Tree Visualization** | Generate a structure for any directory for visualizing and understanding the codebase |
-| **Smart File Selection** | Control what's selected by the tool with custom ignore patterns, depth limits, and item caps |
-| **Interactive Selection** | Gain full control of the output by reviewing what's selected by the file selection service |
-| **Copy Your Codebase** | Instantly copy the whole codebase file contents to your clipboard to paste into LLMs |
-| **Multiple Export Formats** | Export your codebase contents to files using tree, json and markdown formats |
-| **Zipping the Whole Project** | Create project archives (optionally respecting `.gitignore` with `-g` flag) |
-| **Large/Binary Files Handling** | Automatically detects binary and large files and marks or skips them during export |
-
-
----
 
 ## ⚙️ Common Arguments
 
