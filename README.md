@@ -51,7 +51,7 @@ gt
 ```
 
 <img
-  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/default.jpg"
+  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/default.png"
   alt="gitree demo"
   width="600"
 />
@@ -66,7 +66,7 @@ gt -f
 ```
 
 <img
-  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/full_output.jpg"
+  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/full_output.png"
   alt="gitree demo"
   width="600"
 />
@@ -81,7 +81,7 @@ gt -fe
 ```
 
 <img
-  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/full_output_emoji.jpg"
+  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/full_output_emoji.png"
   alt="gitree demo"
   width="600"
 />
@@ -99,13 +99,13 @@ gt --code -ci
 ```
 
 <img
-  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/interactive.jpg"
+  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/interactive.png"
   alt="gitree demo"
   width="600"
 />
 
 <img
-  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/copy_code_interactive.jpg"
+  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/copy_code_interactive.png"
   alt="gitree demo"
   width="600"
 />
@@ -151,7 +151,7 @@ gt -fx project --fmt json
 ```
 
 <img
-  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/export.jpg"
+  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/export.png"
   alt="gitree demo"
   width="600"
 />
