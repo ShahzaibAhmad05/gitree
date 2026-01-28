@@ -127,7 +127,7 @@ gt -z project --code
 ```
 
 <img
-  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/zipping.jpg"
+  src="https://raw.githubusercontent.com/shahzaibahmad05/shahzaibahmad05/main/gallery/gitree/zipping.png"
   alt="gitree demo"
   width="600"
 />
