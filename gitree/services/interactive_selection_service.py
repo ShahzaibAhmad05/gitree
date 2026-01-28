@@ -1,36 +1,29 @@
 # gitree/services/interactive_selection_service.py
 
 """
-InteractiveSelectionService (no prompt_toolkit)
+Interactive file/directory selection service using ANSI terminal control.
 
-Works on the already-resolved tree produced by ItemsSelectionService (resolved_root dict):
+Works with resolved tree from ItemsSelectionService:
 {
   "self": Path,
   "remaining_items": int,
   "children": [Path | dict, ...],
-  "truncated_entries": bool (only at top currently)
+  "truncated_entries": bool
 }
 
-UI (ANSI):
-- ↑/↓ move
-- Space toggle (dirs toggle recursively)
-- Enter confirm, Ctrl+C exit (returns current selection)
+Controls:
+- ↑/↓: Navigate
+- Space: Toggle selection (directories toggle recursively)
+- Enter: Confirm selection
+- Ctrl+C: Exit with current selection
 
-Default behavior:
-- All resolved FILES start selected (checked=True), so user can deselect.
-- Dirs are derived as checked if all descendant files are checked; otherwise partial.
+Default: All files start selected; user can deselect as needed.
+Directories show checked/partial/unchecked based on contained files.
 
-Viewport behavior:
-- Uses up to VIEWPORT_LINES for list area, but CLAMPS to terminal height so rendering never
-  prints more lines than the terminal can show (prevents scroll-on-render).
-- Re-renders in-place using ANSI cursor positioning (no full-screen clears per keypress).
-
-Enhancements:
-- The viewport list is rendered inside a box (Unicode box drawing).
-- A scroll indicator column is shown inside the box:
-  - ▲ on the first visible row when there are items above
-  - ▼ on the last visible row when there are items below
-  - A small thumb (█) indicates approximate scroll position when scrolling is possible
+Display:
+- Viewport auto-fits terminal height to prevent scrolling
+- In-place rendering using ANSI cursor positioning
+- Unicode box drawing with scroll indicators (▲/▼/█)
 """
 
 from __future__ import annotations
@@ -140,8 +133,8 @@ def _ansi_clear_to_end() -> str:
 
 
 def _ansi_clear_line() -> str:
-    # Clear entire current line
-    return CSI + "2K"
+    # Move to column 0 and clear entire line
+    return "\r" + CSI + "2K"
 
 
 def _term_size() -> Tuple[int, int]:
@@ -232,7 +225,9 @@ def _read_key() -> str:
 class InteractiveSelectionService:
     @staticmethod
     def run(ctx: AppContext, config: Config, resolved_root: Dict[str, Any]) -> Dict[str, Any]:
-        os.system("cls" if os.name == "nt" else "clear")
+        # Clear screen and hide cursor
+        sys.stdout.write(_ansi_clear_screen())
+        sys.stdout.write(_ansi_hide_cursor())
         sys.stdout.flush()
 
         # Build a flat view tree from already-resolved_root (no filesystem scanning)
@@ -352,23 +347,21 @@ class InteractiveSelectionService:
             can_scroll = len(tree) > view_h
             thumb = _scroll_thumb_pos(view_h) if can_scroll else -1
 
-            # Re-render in place:
-            # - On first render: clear screen + home
-            # - Thereafter: just home + overwrite the same block, clearing each line.
+            # Move to home position
+            sys.stdout.write(_ansi_home())
+            
             if first_render:
-                sys.stdout.write(_ansi_hide_cursor())
-                sys.stdout.write(_ansi_clear_screen())
                 first_render = False
-            else:
-                sys.stdout.write(_ansi_home())
 
             # HEADER
             sys.stdout.write(_ansi_clear_line())
-            sys.stdout.write(_ansi_dim(header) + "\n")
+            sys.stdout.write(_ansi_dim(header))
+            sys.stdout.write("\n")
 
             # TOP BORDER
             sys.stdout.write(_ansi_clear_line())
-            sys.stdout.write("┌" + ("─" * inner_w) + "┐" + "\n")
+            sys.stdout.write("┌" + ("─" * inner_w) + "┐")
+            sys.stdout.write("\n")
 
             # VIEWPORT LINES (always exactly view_h lines)
             for row in range(view_h):
@@ -387,45 +380,44 @@ class InteractiveSelectionService:
                         ind = "│"
 
                 sys.stdout.write(_ansi_clear_line())
+                
                 if idx < end:
                     item = tree[idx]
                     indent = "  " * item["depth"]
                     name = item["name"]
 
                     if item["type"] == "dir":
-                        if item.get("partial"):
-                            box = "[~]"
-                        else:
-                            box = "[✓]" if item["checked"] else "[ ]"
+                        box = "[~]" if item.get("partial") else ("[✓]" if item["checked"] else "[ ]")
                     else:
                         box = "[✓]" if item["checked"] else "[ ]"
 
-                    box = _ansi_green(box) if (not item.get("partial") and item["checked"]) else box
+                    if not item.get("partial") and item["checked"]:
+                        box = _ansi_green(box)
+                    
                     line = f"{indent}{box} {name}"
-
-                    # Fit into content_w visible columns while preserving ANSI
                     line = _truncate_ansi(line, content_w)
                     line = _pad_ansi(line, content_w)
 
-                    # Highlight cursor row (invert only the content area, not borders)
                     if idx == cursor:
                         line = _ansi_invert(line)
 
-                    sys.stdout.write("│" + line + ind + "│" + "\n")
+                    sys.stdout.write("│" + line + ind + "│")
                 else:
-                    # Past end of tree: blank content area to fully overwrite old content
                     blank = " " * content_w
-                    sys.stdout.write("│" + blank + ind + "│" + "\n")
+                    sys.stdout.write("│" + blank + ind + "│")
+                
+                sys.stdout.write("\n")
 
             # BOTTOM BORDER
             sys.stdout.write(_ansi_clear_line())
-            sys.stdout.write("└" + ("─" * inner_w) + "┘" + "\n")
+            sys.stdout.write("└" + ("─" * inner_w) + "┘")
+            sys.stdout.write("\n")
 
-            # FOOTER (NO trailing newline to reduce accidental scroll on tight terminals)
+            # FOOTER
             sys.stdout.write(_ansi_clear_line())
             sys.stdout.write(_ansi_dim(footer))
 
-            # Clear anything below our block (so resizing / prior prints don't linger)
+            # Clear rest of screen
             sys.stdout.write(_ansi_clear_to_end())
             sys.stdout.flush()
 
@@ -474,12 +466,11 @@ class InteractiveSelectionService:
                         render()
                         continue
         finally:
-            # Restore terminal visuals and leave it in a clean state.
+            # Restore cursor and clear screen
             sys.stdout.write(_ansi_show_cursor())
             sys.stdout.write(CSI + "0m")
-            sys.stdout.write("\n")
+            sys.stdout.write(_ansi_clear_screen())
             sys.stdout.flush()
-            os.system("cls" if os.name == "nt" else "clear")
 
     @staticmethod
     def _collect_files(resolved_node: Dict[str, Any]) -> Set[Path]:
