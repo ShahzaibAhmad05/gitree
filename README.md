@@ -220,7 +220,7 @@ gt -fx project --fmt json
 | `-h`, `--help`    | Show the **help message** with all available options and exit.                                                  |
 | `-v`, `--version` | Display the **version number** of the tool.                                                                       |
 | `--verbose`       | Enable **logger output** to the console. Helpful for **debugging**.                                             |
-| `--config-user`   | Create a **default config.json** file in the current directory and open it in the **default editor**.           |
+| `--user-config`   | Create a **default config.json** file in the current directory and open it in the **default editor**.           |
 | `--no-config`     | Ignore both **user-level and global-level** `config.json` and use **default and CLI values** for configuration. |
 
 ### Semantic Flags (Quick Actions)
