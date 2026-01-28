@@ -194,7 +194,7 @@ class ParsingService:
         listing.add_argument("--override-files", action="store_true",
             default=argparse.SUPPRESS, help="Override existing files")
         
-        listing.add_argument("--size", action="store_true",
+        listing.add_argument("-s", "--size", action="store_true",
             default=argparse.SUPPRESS, help="Show file sizes in the output") 
 
 
@@ -225,7 +225,7 @@ class ParsingService:
         """
         semantic = ap.add_argument_group("SEMANTIC FLAGS (QUICK ACTIONS)")
 
-        semantic.add_argument("-f", "--full", action="store_true",
+        semantic.add_argument("-f", "--full", "--full-output", action="store_true",
             default=argparse.SUPPRESS,
             help="Shortcut for --max-depth 5 - show full directory tree up to 5 levels deep")
 

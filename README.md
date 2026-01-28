@@ -38,9 +38,7 @@ pip install -U gitree
 
 ---
 
-### 💡 Usage
-
-**To literally get started, I would recommend doing this:**
+### 💡 Getting Started
 
 Open a terminal in any project and run:
 
@@ -211,20 +209,7 @@ gt -fx project --fmt json
 
 ---
 
-## ✨ Overall Features
 
-| Feature                           | Description                                                                   |
-| --------------------------------- | ----------------------------------------------------------------------------- |
-| **Tree Visualization** | Generate a structure for any directory for visualizing and understanding the codebase |
-| **Smart File Selection** | Control what's selected by the tool with custom ignore patterns, depth limits, and item caps |
-| **Interactive Selection** | Gain full control of the output by reviewing what's selected by the file selection service |
-| **Copy Your Codebase** | Instantly copy the whole codebase file contents to your clipboard to paste into LLMs |
-| **Multiple Export Formats** | Export your codebase contents to files using tree, json and markdown formats |
-| **Zipping the Whole Project** | Create project archives (optionally respecting `.gitignore` with `-g` flag) |
-| **Large/Binary Files Handling** | Automatically detects binary and large files and marks or skips them during export |
-
-
----
 
 ## ⚙️ Common Arguments
 
@@ -278,6 +263,7 @@ gt -fx project --fmt json
 | `--no-contents-for [path ...]` | Exclude **contents for specific files** for export/copy.                              |
 | `--max-file-size`            | **Maximum file size** in MB to include in exports (default: 1.0).                       |
 | `--override-files`           | **Override existing files**.                                                            |
+| `-s`, `--size`                | Show **file sizes** in the output.                                                       |
 
 ### Listing Override Options
 
