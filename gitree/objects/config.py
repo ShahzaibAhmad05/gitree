@@ -128,6 +128,7 @@ class Config:
             "interactive": False,
             "emoji": False,
             "verbose": False,
+            "move": False,
             "no_max_depth": False,
             "size": False,
         }

@@ -86,6 +86,9 @@ class ItemsSelectionService:
             gitignore_matcher=gitignore_matcher,
             start_time=start_time
         )
+        
+        # Add root directory to the resolved items for potential use by MoveService
+        resolved_items['root_directory'] = str(resolved_include_paths[-1])
 
         ctx.logger.log(Logger.DEBUG, 
             f"Exited ItemsSelectionService at: {round((time.time()-start_time)*1000, 2)} ms")

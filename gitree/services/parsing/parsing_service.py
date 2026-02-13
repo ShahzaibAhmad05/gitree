@@ -117,6 +117,11 @@ class ParsingService:
             default=argparse.SUPPRESS, 
             help="Enable logger output to the console. Enabling this prints a log"
             " after the full workflow run. Helpful for debugging.")
+        
+        general.add_argument("-m", "--move", action="store_true",
+            default=argparse.SUPPRESS,
+            help="Change the terminal's working directory to the determined root directory"
+                " after displaying the tree structure")
 
 
     @staticmethod

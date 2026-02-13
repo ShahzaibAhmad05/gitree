@@ -18,6 +18,7 @@ from .services.zipping_service import ZippingService
 from .services.export_service import ExportService
 from .services.copy_service import CopyService
 from .services.flush_service import FlushService
+from .services.move_service import MoveService
 
 # from .services.zipping_service import ZippingService
 from .objects.app_context import AppContext
@@ -77,6 +78,10 @@ def main() -> None:
 
         elif config.export:
             ExportService.run(ctx, config, resolved_root)
+
+
+    # Handle directory change if requested
+    MoveService.run(ctx, config, resolved_root)
 
 
     # Log performance (time)

@@ -159,3 +159,117 @@ class TestSemanticOptions(BaseCLISetup):
         self.assertNotIn("app.js", result.stdout,
             msg=self.failed_run_msg(args_str) +
                 f"Did not expect 'app.js' in output: \n\n{result.stdout}")
+
+
+    def test_move_basic(self):
+        """
+        Test --move flag basic functionality
+        Should change working directory to the determined root
+        """
+        # Vars
+        args_str = "--move"
+
+        # Run
+        result = self.run_gitree(args_str)
+
+        # Validate
+        self.assertEqual(result.returncode, 0,
+            msg=self.failed_run_msg(args_str) +
+                self.non_zero_exitcode_msg(result.returncode))
+
+        self.assertTrue(result.stdout.strip(),
+            msg=self.failed_run_msg(args_str) +
+                self.no_output_msg())
+
+        # Should show "Changed working directory to:" message
+        self.assertIn("Changed working directory to:", result.stdout,
+            msg=self.failed_run_msg(args_str) +
+                f"Expected directory change message in output: \n\n{result.stdout}")
+
+
+    def test_move_short_flag(self):
+        """
+        Test -m flag (short version)
+        Should work the same as --move
+        """
+        # Vars
+        args_str = "-m"
+
+        # Run
+        result = self.run_gitree(args_str)
+
+        # Validate
+        self.assertEqual(result.returncode, 0,
+            msg=self.failed_run_msg(args_str) +
+                self.non_zero_exitcode_msg(result.returncode))
+
+        self.assertTrue(result.stdout.strip(),
+            msg=self.failed_run_msg(args_str) +
+                self.no_output_msg())
+
+        # Should show "Changed working directory to:" message
+        self.assertIn("Changed working directory to:", result.stdout,
+            msg=self.failed_run_msg(args_str) +
+                f"Expected directory change message in output: \n\n{result.stdout}")
+
+
+    def test_move_with_subdirectory(self):
+        """
+        Test move functionality with a specific subdirectory target
+        Should move to the specified subdirectory
+        """
+        # Vars - specify src subdirectory
+        args_str = "src -m"
+
+        # Run
+        result = self.run_gitree(args_str)
+
+        # Validate
+        self.assertEqual(result.returncode, 0,
+            msg=self.failed_run_msg(args_str) +
+                self.non_zero_exitcode_msg(result.returncode))
+
+        self.assertTrue(result.stdout.strip(),
+            msg=self.failed_run_msg(args_str) +
+                self.no_output_msg())
+
+        # Should show directory change message with src path
+        self.assertIn("Changed working directory to:", result.stdout,
+            msg=self.failed_run_msg(args_str) +
+                f"Expected directory change message in output: \n\n{result.stdout}")
+
+        # Should contain reference to src directory in the path
+        self.assertIn("src", result.stdout,
+            msg=self.failed_run_msg(args_str) +
+                f"Expected 'src' to appear in directory change path: \n\n{result.stdout}")
+
+
+    def test_move_combined_with_full(self):
+        """
+        Test combining --move with --full flag
+        Should display full tree and change directory
+        """
+        # Vars
+        args_str = "--full --move"
+
+        # Run
+        result = self.run_gitree(args_str)
+
+        # Validate
+        self.assertEqual(result.returncode, 0,
+            msg=self.failed_run_msg(args_str) +
+                self.non_zero_exitcode_msg(result.returncode))
+
+        self.assertTrue(result.stdout.strip(),
+            msg=self.failed_run_msg(args_str) +
+                self.no_output_msg())
+
+        # Should show directory structure (from --full)
+        self.assertIn("src", result.stdout,
+            msg=self.failed_run_msg(args_str) +
+                f"Expected 'src' in output from --full flag: \n\n{result.stdout}")
+
+        # Should show directory change message (from --move)
+        self.assertIn("Changed working directory to:", result.stdout,
+            msg=self.failed_run_msg(args_str) +
+                f"Expected directory change message from --move flag: \n\n{result.stdout}")

@@ -86,6 +86,23 @@ gt -fe
   width="600"
 />
 
+### 🚀 Streamlined Workflow with Move
+
+The usual workflow in terminal involves listing directory contents and then using `cd` to navigate. With the `-m`/`--move` flag, gitree streamlines this by automatically changing your working directory to the determined root:
+
+```bash
+# Display project structure and move to the gitree subdirectory
+gt gitree -m
+
+# For current directory, display structure and stay in place
+gt -m
+
+# Works with multiple paths - moves to the common parent directory
+gt src tests -m
+```
+
+This feature determines the root directory as the common parent of all given paths, displays the tree structure, and then changes your terminal's working directory to that root location.
+
 ### 🧠 This is where it gets useful
 
 For copying all code files in your project, with interactive selection:
@@ -219,6 +236,7 @@ gt -fx project --fmt json
 | ----------------- | ------------------------------------------------------------------------------------------------------------- |
 | `-h`, `--help`    | Show the **help message** with all available options and exit.                                                  |
 | `-v`, `--version` | Display the **version number** of the tool.                                                                       |
+| `-m`, `--move`    | **Change** the terminal's working directory to the determined **root directory** after displaying the tree structure. |
 | `--verbose`       | Enable **logger output** to the console. Helpful for **debugging**.                                             |
 | `--user-config`   | Create a **default config.json** file in the current directory and open it in the **default editor**.           |
 | `--no-config`     | Ignore both **user-level and global-level** `config.json` and use **default and CLI values** for configuration. |
