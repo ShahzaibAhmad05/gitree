@@ -5,25 +5,26 @@ Code file for housing the main function.
 """
 
 # Default libs
-import sys, time
+import sys
+import time
+
 if sys.platform.startswith('win'):      # fix windows unicode error on CI
     sys.stdout.reconfigure(encoding='utf-8')
 
-# Deps from this project
-from .services.parsing import ParsingService
-from .services.general_options_service import GeneralOptionsService
-from .services.items_selection import ItemsSelectionService
-from .services.drawing_service import DrawingService
-from .services.zipping_service import ZippingService
-from .services.export_service import ExportService
-from .services.copy_service import CopyService
-from .services.flush_service import FlushService
-from .services.move_service import MoveService
-
 # from .services.zipping_service import ZippingService
 from .objects.app_context import AppContext
-from .utilities.logging_utility import Logger
+from .services.copy_service import CopyService
+from .services.drawing_service import DrawingService
+from .services.export_service import ExportService
+from .services.flush_service import FlushService
+from .services.general_options_service import GeneralOptionsService
 from .services.interactive_selection_service import InteractiveSelectionService
+from .services.items_selection import ItemsSelectionService
+
+# Deps from this project
+from .services.parsing import ParsingService
+from .services.zipping_service import ZippingService
+from .utilities.logging_utility import Logger
 
 
 def main() -> None:
@@ -81,7 +82,7 @@ def main() -> None:
 
 
     # Handle directory change if requested
-    MoveService.run(ctx, config, resolved_root)
+        InteractiveSelectionService.move_service(ctx, config, resolved_root)
 
 
     # Log performance (time)
