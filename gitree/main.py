@@ -82,7 +82,7 @@ def main() -> None:
 
 
     # Handle directory change if requested
-        InteractiveSelectionService.move_service(ctx, config, resolved_root)
+        ItemsSelectionService.move_service(ctx, config, resolved_root)
 
 
     # Log performance (time)
